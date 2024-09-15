@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Chatti.Core.Enums;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -22,7 +23,7 @@ namespace Chatti.Entities
         public byte[]? PasswordHash { get; set; }
         [Required]
         public byte[]? PasswordSalt { get; set; }
-
+        public UserType Type { get; set; } = UserType.USER;
 
     }
 }

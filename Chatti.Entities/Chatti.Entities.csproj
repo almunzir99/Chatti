@@ -10,4 +10,8 @@
     <PackageReference Include="MongoDB.Bson" Version="2.28.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Chatti.Core\Chatti.Core.csproj" />
+  </ItemGroup>
+
 </Project>
