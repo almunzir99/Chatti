@@ -1,4 +1,5 @@
 
+using Chatti.Api.Extensions;
 using Chatti.Core.Settings;
 using Chatti.Persistence.Database;
 using Microsoft.EntityFrameworkCore;
@@ -11,8 +12,14 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-
+var mongoDBSettings = builder.Configuration.GetSection("MongoDBSettings").Get<MongoDbSettings>();
+builder.Services.AddDbContext<AppDbContext>(opt =>
+{
+    opt.UseMongoDB(mongoDBSettings!.AtlasURI, mongoDBSettings.DatabaseName);
+});
+builder.Services.ConfigureSwagger();
 var app = builder.Build();
+
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -20,11 +27,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-var mongoDBSettings = builder.Configuration.GetSection("MongoDBSettings").Get<MongoDbSettings>();
-builder.Services.AddDbContext<AppDbContext>(opt =>
-{
-    opt.UseMongoDB(mongoDBSettings!.AtlasURI, mongoDBSettings.DatabaseName);
-});
+
 
 app.UseHttpsRedirection();
 
