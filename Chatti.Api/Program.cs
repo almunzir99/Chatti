@@ -1,3 +1,8 @@
+
+using Chatti.Core.Settings;
+using Chatti.Persistence.Database;
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -15,6 +20,11 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+var mongoDBSettings = builder.Configuration.GetSection("MongoDBSettings").Get<MongoDbSettings>();
+builder.Services.AddDbContext<AppDbContext>(opt =>
+{
+    opt.UseMongoDB(mongoDBSettings!.AtlasURI, mongoDBSettings.DatabaseName);
+});
 
 app.UseHttpsRedirection();
 
