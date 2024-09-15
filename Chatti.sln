@@ -7,9 +7,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Chatti.Api", "Chatti.Api\Ch
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Chatti.Core", "Chatti.Core\Chatti.Core.csproj", "{15CAE17C-E0CE-4085-A7EC-79E8B95016B9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Chatti.Persistence", "Chatti.Persistence\Chatti.Persistence.csproj", "{F6A7B7DB-6732-4594-911D-1D5D26060EC8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Chatti.Persistence", "Chatti.Persistence\Chatti.Persistence.csproj", "{F6A7B7DB-6732-4594-911D-1D5D26060EC8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Chatti.Entities", "Chatti.Entities\Chatti.Entities.csproj", "{01BF891F-98D6-45EC-8E20-D0CFF1464EC4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Chatti.Entities", "Chatti.Entities\Chatti.Entities.csproj", "{01BF891F-98D6-45EC-8E20-D0CFF1464EC4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Chatti.Models", "Chatti.Models\Chatti.Models.csproj", "{826EFA95-FEC3-4B97-9589-C96B0870FFD2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{01BF891F-98D6-45EC-8E20-D0CFF1464EC4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{01BF891F-98D6-45EC-8E20-D0CFF1464EC4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{01BF891F-98D6-45EC-8E20-D0CFF1464EC4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{826EFA95-FEC3-4B97-9589-C96B0870FFD2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{826EFA95-FEC3-4B97-9589-C96B0870FFD2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{826EFA95-FEC3-4B97-9589-C96B0870FFD2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{826EFA95-FEC3-4B97-9589-C96B0870FFD2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

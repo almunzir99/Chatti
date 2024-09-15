@@ -10,16 +10,21 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+//configure swagger
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.ConfigureSwagger();
+
+
+//configure db context
 var mongoDBSettings = builder.Configuration.GetSection("MongoDBSettings").Get<MongoDbSettings>();
 builder.Services.AddDbContext<AppDbContext>(opt =>
 {
     opt.UseMongoDB(mongoDBSettings!.AtlasURI, mongoDBSettings.DatabaseName);
 });
-builder.Services.ConfigureSwagger();
 var app = builder.Build();
-
+// configure automapper
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

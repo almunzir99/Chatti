@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="13.0.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.8" />
     <PackageReference Include="MongoDB.EntityFrameworkCore" Version="8.1.1" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
@@ -15,6 +16,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Chatti.Core\Chatti.Core.csproj" />
+    <ProjectReference Include="..\Chatti.Models\Chatti.Models.csproj" />
     <ProjectReference Include="..\Chatti.Persistence\Chatti.Persistence.csproj" />
   </ItemGroup>
 
