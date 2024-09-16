@@ -27,11 +27,11 @@ var app = builder.Build();
 // configure automapper
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddSingleton<IConfiguration>(builder.Configuration);
-
-
 var jwtSettings = builder.Configuration.GetSection("Jwt").Get<JwtSettings>();
 // configure jwt
 builder.Services.AddJwtAuthorization(jwtSettings!);
+
+builder.Services.AddBusinessServices();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {

@@ -8,8 +8,8 @@ namespace Chatti.Api.AutoMapper
     {
         public AutoMapperProfile()
         {
-            CreateMap<User, UserResponseModel>().ReverseMap();
-            CreateMap<User, UserRequestModel>().ReverseMap();
+            CreateMap<User, UserResponse>().ReverseMap();
+            CreateMap<User, AuthenticationModel>().ReverseMap();
 
 
         }
