@@ -5,13 +5,15 @@ VisualStudioVersion = 17.10.35004.147
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Chatti.Api", "Chatti.Api\Chatti.Api.csproj", "{839EDB5E-10D8-4DF8-A38E-396A193AED8A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Chatti.Core", "Chatti.Core\Chatti.Core.csproj", "{15CAE17C-E0CE-4085-A7EC-79E8B95016B9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Chatti.Core", "Chatti.Core\Chatti.Core.csproj", "{15CAE17C-E0CE-4085-A7EC-79E8B95016B9}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Chatti.Persistence", "Chatti.Persistence\Chatti.Persistence.csproj", "{F6A7B7DB-6732-4594-911D-1D5D26060EC8}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Chatti.Entities", "Chatti.Entities\Chatti.Entities.csproj", "{01BF891F-98D6-45EC-8E20-D0CFF1464EC4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Chatti.Models", "Chatti.Models\Chatti.Models.csproj", "{826EFA95-FEC3-4B97-9589-C96B0870FFD2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Chatti.Models", "Chatti.Models\Chatti.Models.csproj", "{826EFA95-FEC3-4B97-9589-C96B0870FFD2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Chatti.Services", "Chatti.Services\Chatti.Services.csproj", "{B1B6D18A-677A-4A31-8E68-BD97E369BEC5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{826EFA95-FEC3-4B97-9589-C96B0870FFD2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{826EFA95-FEC3-4B97-9589-C96B0870FFD2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{826EFA95-FEC3-4B97-9589-C96B0870FFD2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B1B6D18A-677A-4A31-8E68-BD97E369BEC5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B1B6D18A-677A-4A31-8E68-BD97E369BEC5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B1B6D18A-677A-4A31-8E68-BD97E369BEC5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B1B6D18A-677A-4A31-8E68-BD97E369BEC5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

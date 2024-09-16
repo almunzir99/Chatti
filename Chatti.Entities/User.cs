@@ -1,4 +1,5 @@
 ﻿using Chatti.Core.Enums;
+using MongoDB.Bson;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -24,6 +25,7 @@ namespace Chatti.Entities
         [Required]
         public byte[]? PasswordSalt { get; set; }
         public UserType Type { get; set; } = UserType.USER;
+        public ObjectId System { get; set; }
 
     }
 }
