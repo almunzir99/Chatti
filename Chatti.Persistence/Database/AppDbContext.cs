@@ -15,11 +15,15 @@ namespace Chatti.Persistence.Database
 
         }
         public DbSet<User> Users { get; init; }
+        public DbSet<Client> Clients { get; init; }
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<User>();
+            modelBuilder.Entity<Client>();
+
         }
     }
 

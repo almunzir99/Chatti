@@ -8,7 +8,7 @@ namespace Chatti.Api.AutoMapper
     {
         public AutoMapperProfile()
         {
-            CreateMap<User, UserResponse>().ReverseMap();
+            CreateMap<User, UserResponse>().ForMember(c => c.Id, opt => opt.MapFrom(x => x.Id.ToString())).ReverseMap();
             CreateMap<User, AuthenticationModel>().ReverseMap();
 
 

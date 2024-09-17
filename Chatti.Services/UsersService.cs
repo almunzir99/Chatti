@@ -39,12 +39,38 @@ namespace Chatti.Services
             var result = HashingHelper.VerifyPassword(model.Password, user.PasswordHash!, user.PasswordSalt!);
             if (!result)
                 throw new Exception("invalid password");
-            if (model.SystemId != null && !user.SystemId.Equals(model.SystemId))
+            if (model.SystemId != null && !user.ClientId.Equals(model.SystemId))
                 throw new Exception("invalid system id");
             var mappedUser = _mapper.Map<UserResponse>(user);
             mappedUser.Token = GenerateToken(user);
             return mappedUser;
 
+        }
+        public async Task<UserResponse> Register(UserRequest model)
+        {
+            var target = await _dbContext.Users.Where(x => x.Status == Core.Enums.StatusEnum.Active)
+                .FirstOrDefaultAsync(x => x.Username == model.Username);
+            if (target != null)
+                throw new Exception("Username is already used");
+            var client = await _dbContext.Clients.FirstOrDefaultAsync(x => x.Id.Equals(target.ClientId));
+            if (client == null)
+                throw new Exception("Invalid clientId");
+            byte[] passwordSalt = [];
+            byte[] passwordHash = [];
+            HashingHelper.CreateHashPassword(model.Password, out passwordHash, out passwordSalt);
+            var newUser = new User()
+            {
+                PasswordHash = passwordHash,
+                PasswordSalt = passwordSalt,
+                Username = model.Username,
+                FullName = model.FullName,
+                Email = model.Email,
+                ClientId = new MongoDB.Bson.ObjectId(model.ClientId),
+
+            };
+            await _dbContext.Users.AddAsync(newUser);
+            await _dbContext.SaveChangesAsync();
+            return _mapper.Map<UserResponse>(model);
         }
 
         private string GenerateToken(User user)

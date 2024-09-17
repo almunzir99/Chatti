@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Chatti.Entities
 {
-    public class System : EntityBase
+    public class Client : EntityBase
     {
         public required string Name { get; set; }
     }

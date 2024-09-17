@@ -21,5 +21,11 @@ namespace Chatti.Api.Controllers
             var user = await userService.Authenticate(model);
             return Ok(user);
         }
+        [HttpPost("register")]
+        public async Task<IActionResult> RegisterAsync([FromBody] UserRequest model)
+        {
+            var user = await userService.Register(model);
+            return Ok(user);
+        }
     }
 }
