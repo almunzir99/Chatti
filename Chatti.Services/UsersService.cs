@@ -41,7 +41,7 @@ namespace Chatti.Services
                 throw new Exception("invalid password");
             if (model.SystemId != null && !user.SystemId.Equals(model.SystemId))
                 throw new Exception("invalid system id");
-            var mappedUser = _mapper.Map<UserResponse>(result);
+            var mappedUser = _mapper.Map<UserResponse>(user);
             mappedUser.Token = GenerateToken(user);
             return mappedUser;
 

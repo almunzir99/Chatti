@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Chatti.Entities\Chatti.Entities.csproj" />
+    <ProjectReference Include="..\Chatti.Models\Chatti.Models.csproj" />
   </ItemGroup>
 
 </Project>

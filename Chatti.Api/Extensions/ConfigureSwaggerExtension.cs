@@ -6,7 +6,7 @@ namespace Chatti.Api.Extensions
     {
         public static void ConfigureSwagger(this IServiceCollection services)
         {
-            _ = services.AddSwaggerGen(c =>
+            services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo
                 {

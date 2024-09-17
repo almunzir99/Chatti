@@ -1,4 +1,5 @@
-﻿using Chatti.Services;
+﻿using Chatti.Models.Users;
+using Chatti.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -13,6 +14,12 @@ namespace Chatti.Api.Controllers
         public UsersController(UsersService userService)
         {
             this.userService = userService;
+        }
+        [HttpPost("authenticate")]
+        public async Task<IActionResult> AuthenticateAsync([FromBody] AuthenticationModel model)
+        {
+            var user = await userService.Authenticate(model);
+            return Ok(user);
         }
     }
 }

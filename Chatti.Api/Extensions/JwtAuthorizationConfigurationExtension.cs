@@ -6,7 +6,7 @@ using System.Text;
 
 namespace Chatti.Api.Extensions
 {
-    public static class JwtAuthorizationConfiguration
+    public static class JwtAuthorizationConfigurationExtension
     {
 
         public static void AddJwtAuthorization(this IServiceCollection services, JwtSettings settings)
