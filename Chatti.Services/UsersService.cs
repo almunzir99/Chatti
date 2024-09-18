@@ -39,7 +39,7 @@ namespace Chatti.Services
             var result = HashingHelper.VerifyPassword(model.Password, user.PasswordHash!, user.PasswordSalt!);
             if (!result)
                 throw new Exception("invalid password");
-            if (model.SystemId != null && !user.ClientId.Equals(model.SystemId))
+            if (model.SystemId != null && !user.ClientId.ToString().Equals(model.SystemId))
                 throw new Exception("invalid system id");
             var mappedUser = _mapper.Map<UserResponse>(user);
             mappedUser.Token = GenerateToken(user);
@@ -52,7 +52,7 @@ namespace Chatti.Services
                 .FirstOrDefaultAsync(x => x.Username == model.Username);
             if (target != null)
                 throw new Exception("Username is already used");
-            var client = await _dbContext.Clients.FirstOrDefaultAsync(x => x.Id.Equals(target.ClientId));
+            var client = await _dbContext.Clients.FirstOrDefaultAsync(x => x.Id.ToString().Equals(model.ClientId));
             if (client == null)
                 throw new Exception("Invalid clientId");
             byte[] passwordSalt = [];
@@ -66,11 +66,12 @@ namespace Chatti.Services
                 FullName = model.FullName,
                 Email = model.Email,
                 ClientId = new MongoDB.Bson.ObjectId(model.ClientId),
+                Type = Core.Enums.UserType.USER,
 
             };
             await _dbContext.Users.AddAsync(newUser);
             await _dbContext.SaveChangesAsync();
-            return _mapper.Map<UserResponse>(model);
+            return _mapper.Map<UserResponse>(newUser);
         }
 
         private string GenerateToken(User user)

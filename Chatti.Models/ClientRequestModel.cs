@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Chatti.Entities
+namespace Chatti.Models
 {
-    public class Client : EntityBase
+    public class ClientRequestModel
     {
         public required string ClientName { get; set; }
     }
