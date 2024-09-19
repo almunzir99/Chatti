@@ -16,14 +16,18 @@ namespace Chatti.Persistence.Database
         }
         public DbSet<User> Users { get; init; }
         public DbSet<Client> Clients { get; init; }
-
+        public DbSet<ChatRoom> ChatRooms { get; init; }
+        public DbSet<Message> Messages { get; init; }
+        public DbSet<Attachment> Attachments { get; init; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<User>();
             modelBuilder.Entity<Client>();
-
+            modelBuilder.Entity<ChatRoom>();
+            modelBuilder.Entity<Message>();
+            modelBuilder.Entity<Attachment>();
         }
     }
 
