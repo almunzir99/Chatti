@@ -1,13 +1,12 @@
 ﻿using Chatti.Models.Users;
 using Chatti.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Chatti.Api.Controllers
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class UsersController : ControllerBase
+    public class UsersController : BaseApiController
     {
         private readonly UsersService userService;
 
@@ -22,10 +21,18 @@ namespace Chatti.Api.Controllers
             return Ok(user);
         }
         [HttpPost("register")]
-        public async Task<IActionResult> RegisterAsync([FromBody] UserRequest model)
+        public async Task<IActionResult> RegisterAsync([FromBody] UserRequestModel model)
         {
             var user = await userService.Register(model);
             return Ok(user);
+        }
+        [Authorize]
+        [HttpGet]
+        public async Task<IActionResult> GetAsync()
+        {
+            string? userId = CurrentUserType == "ADMIN" ? null : CurrentUserId;
+            var users = await userService.GetUsersListAsync(userId);
+            return Ok(users);
         }
     }
 }

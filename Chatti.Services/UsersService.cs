@@ -6,13 +6,9 @@ using Chatti.Persistence.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
-using System;
-using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
 using System.Security.Claims;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace Chatti.Services
 {
@@ -28,7 +24,7 @@ namespace Chatti.Services
             _mapper = mapper;
         }
 
-        public async Task<UserResponse> Authenticate(AuthenticationModel model)
+        public async Task<UserResponseModel> Authenticate(AuthenticationModel model)
         {
             var user = await _dbContext.Users.FirstOrDefaultAsync(x => x.Username == model.UserName);
             if (user == null)
@@ -41,12 +37,12 @@ namespace Chatti.Services
                 throw new Exception("invalid password");
             if (model.SystemId != null && !user.ClientId.ToString().Equals(model.SystemId))
                 throw new Exception("invalid system id");
-            var mappedUser = _mapper.Map<UserResponse>(user);
+            var mappedUser = _mapper.Map<UserResponseModel>(user);
             mappedUser.Token = GenerateToken(user);
             return mappedUser;
 
         }
-        public async Task<UserResponse> Register(UserRequest model)
+        public async Task<UserResponseModel> Register(UserRequestModel model)
         {
             var target = await _dbContext.Users.Where(x => x.Status == Core.Enums.StatusEnum.Active)
                 .FirstOrDefaultAsync(x => x.Username == model.Username);
@@ -67,11 +63,14 @@ namespace Chatti.Services
                 Email = model.Email,
                 ClientId = new MongoDB.Bson.ObjectId(model.ClientId),
                 Type = Core.Enums.UserType.USER,
+                
 
             };
             await _dbContext.Users.AddAsync(newUser);
             await _dbContext.SaveChangesAsync();
-            return _mapper.Map<UserResponse>(newUser);
+            UserResponseModel userResponseModel = _mapper.Map<UserResponseModel>(newUser);
+            userResponseModel.Token = GenerateToken(newUser);
+            return userResponseModel;
         }
 
         private string GenerateToken(User user)
@@ -82,7 +81,7 @@ namespace Chatti.Services
             {
                 Subject = new ClaimsIdentity(new Claim[]
                 {
-                    new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                    new Claim("id", user.Id.ToString()),
                     new Claim(ClaimTypes.Role, user.Type == Core.Enums.UserType.USER ? "USER" : "ADMIN"),
                 }),
                 Expires = DateTime.UtcNow.AddDays(1),
@@ -93,6 +92,16 @@ namespace Chatti.Services
 
             var token = tokenHandler.CreateToken(tokenDescriptor);
             return tokenHandler.WriteToken(token);
+
+        }
+
+        public async Task<List<UserResponseModel>> GetUsersListAsync(string? CurrentUserId = null)
+        {
+            var users = await _dbContext.Users
+                .Where(x =>x.Status == Core.Enums.StatusEnum.Active)
+                .Where(x => x.Type == Core.Enums.UserType.USER)
+                .Where(x => CurrentUserId == null || !x.Id.ToString().Equals(CurrentUserId)).ToListAsync();
+            return _mapper.Map<List<UserResponseModel>>(users);
         }
     }
 }

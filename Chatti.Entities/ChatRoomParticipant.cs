@@ -7,10 +7,9 @@ using System.Threading.Tasks;
 
 namespace Chatti.Entities
 {
-    public class ChatRoomParticipant : EntityBase
+    public class ChatRoomParticipant
     {
-        public ObjectId ChatRoomId { get; set; }
         public ObjectId UserId { get; set; }
-        public bool IsOwner { get; set; }
+        public bool IsAdmin { get; set; }
     }
 }

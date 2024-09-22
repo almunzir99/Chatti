@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Chatti.Models.Users
 {
-    public class UserResponse
+    public class UserResponseModel
     {
         public string? Id { get; set; }
         public string? Username { get; set; }

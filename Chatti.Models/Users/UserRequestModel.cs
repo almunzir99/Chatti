@@ -1,6 +1,6 @@
 ﻿namespace Chatti.Models.Users
 {
-    public class UserRequest
+    public class UserRequestModel
     {
         public required string Username { get; set; }
         public required string FullName { get; set; }
