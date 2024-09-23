@@ -1,5 +1,6 @@
 ﻿using Chatti.Services;
 using Chatti.Services.ChatRooms;
+using Chatti.Services.Messages;
 
 namespace Chatti.Api.Extensions
 {
@@ -10,6 +11,8 @@ namespace Chatti.Api.Extensions
             services.AddScoped<UsersService>();
             services.AddScoped<ClientsService>();
             services.AddScoped<IChatRoomService, ChatRoomService>();
+            services.AddScoped<IMessagesService, MessagesService>();
+
 
 
         }

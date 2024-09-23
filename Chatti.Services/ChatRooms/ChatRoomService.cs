@@ -73,7 +73,7 @@ namespace Chatti.Services.ChatRooms
                 .Where(x => chatrooms.SelectMany(x => x.Participants).Any(d => d.UserId.Equals(x.Id))).ToListAsync();
             // distribute each user for each chat room 
             var result = chatrooms.Select(x =>
-            {
+            { 
                 List<User> chatroomUsers = users.Where(u => x.Participants.Any(p => p.UserId.Equals(u.Id))).ToList();
                 return new ChatRoomResponseModel()
                 {

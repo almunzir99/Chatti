@@ -8,9 +8,10 @@ namespace Chatti.Core.Enums
 {
     public enum MimeType
     {
-        File,
+        DOCUMENT,
         IMAGE,
         PDF,
+        File
 
     }
 }

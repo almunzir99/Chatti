@@ -18,7 +18,6 @@ namespace Chatti.Persistence.Database
         public DbSet<Client> Clients { get; init; }
         public DbSet<ChatRoom> ChatRooms { get; init; }
         public DbSet<Message> Messages { get; init; }
-        public DbSet<Attachment> Attachments { get; init; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -27,7 +26,6 @@ namespace Chatti.Persistence.Database
             modelBuilder.Entity<Client>();
             modelBuilder.Entity<ChatRoom>();
             modelBuilder.Entity<Message>();
-            modelBuilder.Entity<Attachment>();
         }
     }
 
