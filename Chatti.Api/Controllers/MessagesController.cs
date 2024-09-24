@@ -23,9 +23,8 @@ namespace Chatti.Api.Controllers
         [HttpPost("send")]
         public async Task<IActionResult> SendAsync(IFormFile? attachment, [FromForm] MessageRequestModel model)
         {
-            model.SenderId = CurrentUserId;
-            var messageAttachment = attachment != null ? await UploadAsync(attachment, model) : null;
-            var result = await service.SendAsync(model, messageAttachment);
+            var messageAttachment = attachment != null ? await UploadAsync(attachment, CurrentUserId, model) : null;
+            var result = await service.SendAsync(model, CurrentUserId, messageAttachment);
             return Ok(result);
         }
         [HttpGet("{chatroomId}")]
@@ -34,9 +33,10 @@ namespace Chatti.Api.Controllers
             var messages = await service.ListAsync(chatroomId);
             return Ok(messages);
         }
-        private async Task<MessageAttachmentModel> UploadAsync(IFormFile file, MessageRequestModel model)
+        private async Task<MessageAttachmentModel> UploadAsync(IFormFile file, string senderId, MessageRequestModel model)
         {
-            var path = Path.Combine(webHostEnvironment.WebRootPath, "uploads", model.SenderId!.ToString(), "chat-rooms", model.ChatRoomId.ToString());
+            var relativePath = Path.Combine("uploads", senderId, "chat-rooms", model.ChatRoomId.ToString());
+            var path = Path.Combine(webHostEnvironment.WebRootPath, relativePath);
             Directory.CreateDirectory(path);
             using (var stream = new FileStream(Path.Combine(path, file.FileName), FileMode.Create))
             {
@@ -44,7 +44,7 @@ namespace Chatti.Api.Controllers
             }
             var messageAttachment = new MessageAttachmentModel()
             {
-                AttachmentPath = path,
+                AttachmentPath = relativePath,
                 FileName = file.FileName,
                 Type = MIMETypeHelper.GetMimeType(Path.GetExtension(file.FileName)).ToString(),
 

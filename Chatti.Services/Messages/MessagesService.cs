@@ -34,18 +34,19 @@ namespace Chatti.Services.Messages
 
         }
 
-        public async Task<MessageResponseModel> SendAsync(MessageRequestModel model, MessageAttachmentModel? attachment = null)
+        public async Task<MessageResponseModel> SendAsync(MessageRequestModel model, string senderId, MessageAttachmentModel? attachment = null)
         {
             var message = mapper.Map<Message>(model);
             message.Attachment = attachment == null ? null : mapper.Map<MessageAttachment>(attachment);
-            var sender = await dbContext.Users.FirstOrDefaultAsync(x => x.Id.ToString().Equals(model.SenderId));
+            var sender = await dbContext.Users.FirstOrDefaultAsync(x => x.Id.ToString().Equals(senderId));
             if (sender == null)
                 throw new Exception("Invalid sender id");
-            var chatroom = await dbContext.ChatRooms.FirstOrDefaultAsync(x => x.Id.ToString().Equals(model.ChatRoomId) && x.Participants.Any(p => p.UserId.ToString().Equals(model.SenderId)));
+            var chatroom = await dbContext.ChatRooms.FirstOrDefaultAsync(x => x.Id.ToString().Equals(model.ChatRoomId) && x.Participants.Any(p => p.UserId.ToString().Equals(senderId)));
             if (chatroom == null)
                 throw new Exception("Invalid chatroom id");
 
             message.Sender = mapper.Map<MessageSender>(sender);
+            message.Sender.UserId = senderId;
             await dbContext.Messages.AddAsync(message);
             await dbContext.SaveChangesAsync();
             return mapper.Map<MessageResponseModel>(message);
