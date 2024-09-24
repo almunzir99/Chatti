@@ -11,8 +11,9 @@ namespace Chatti.Services.Messages
     {
         Task<MessageResponseModel> SendAsync(MessageRequestModel model, string senderId, MessageAttachmentModel? attachment = null);
         Task<IList<MessageResponseModel>> ListAsync(string ChatRoomId, string search = "");
-        Task DeleteAsync(string senderId);
+        Task DeleteAsync(string senderId, string messageId);
         Task<MessageResponseModel> EditAsync(string senderId, string messageId, MessageRequestModel model);
+
 
 
     }

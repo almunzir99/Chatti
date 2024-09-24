@@ -51,13 +51,21 @@ namespace Chatti.Services.Messages
             await dbContext.SaveChangesAsync();
             return mapper.Map<MessageResponseModel>(message);
         }
-        public Task<MessageResponseModel> EditAsync(string senderId, string messageId, MessageRequestModel model)
+        public async Task<MessageResponseModel> EditAsync(string senderId, string messageId, MessageRequestModel model)
         {
-            throw new NotImplementedException();
+            var message = await dbContext.Messages.FirstOrDefaultAsync(x => x.Id.ToString().Equals(messageId) && x.Sender.UserId.Equals(senderId));
+            if (message == null) throw new Exception("Message not found");
+            message.Content = model.Content;
+            message.ModifiedOn = DateTime.Now;
+            await dbContext.SaveChangesAsync();
+            return mapper.Map<MessageResponseModel>(message);
         }
-        public Task DeleteAsync(string senderId)
+        public async Task DeleteAsync(string senderId, string messageId)
         {
-            throw new NotImplementedException();
+            var message = await dbContext.Messages.FirstOrDefaultAsync(x => x.Id.ToString().Equals(messageId) && x.Sender.UserId.Equals(senderId));
+            if (message == null) throw new Exception("Message not found");
+            message.Status = Core.Enums.StatusEnum.Deleted;
+            await dbContext.SaveChangesAsync();
         }
     }
 }

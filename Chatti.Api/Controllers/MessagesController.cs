@@ -33,6 +33,20 @@ namespace Chatti.Api.Controllers
             var messages = await service.ListAsync(chatroomId);
             return Ok(messages);
         }
+        [HttpPut("{messageId}")]
+        public async Task<IActionResult> EditMessageAsync([FromRoute] string messageId, MessageRequestModel model)
+        {
+            var result = await service.EditAsync(CurrentUserId, messageId, model);
+            return Ok(result);
+
+        }
+        [HttpDelete("{messageId}")]
+        public async Task<IActionResult> DeleteMessageAsync([FromRoute] string messageId)
+        {
+            await service.DeleteAsync(CurrentUserId, messageId);
+            return Ok("Message deleted successfully");
+
+        }
         private async Task<MessageAttachmentModel> UploadAsync(IFormFile file, string senderId, MessageRequestModel model)
         {
             var relativePath = Path.Combine("uploads", senderId, "chat-rooms", model.ChatRoomId.ToString());
