@@ -14,8 +14,8 @@ namespace Chatti.Api.AutoMapper
         {
             CreateMap<User, UserResponseModel>().ForMember(c => c.Id, opt => opt.MapFrom(x => x.Id.ToString())).ReverseMap();
             CreateMap<User, AuthenticationModel>().ReverseMap();
-            CreateMap<Client, ClientResponseModel>().ForMember(c => c.Id, opt => opt.MapFrom(x => x.Id.ToString())).ReverseMap();
-            CreateMap<Client, ClientRequestModel>().ReverseMap();
+            CreateMap<Tenant, TenantResponseModel>().ForMember(c => c.Id, opt => opt.MapFrom(x => x.Id.ToString())).ReverseMap();
+            CreateMap<Tenant, TenantRequestModel>().ReverseMap();
             CreateMap<ChatRoom, ChatRoomResponseModel>().ReverseMap();
             CreateMap<Message, MessageRequestModel>().ReverseMap();
             CreateMap<Message, MessageResponseModel>()

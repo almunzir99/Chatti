@@ -8,36 +8,36 @@ namespace Chatti.Api.Controllers
     [Authorize(Roles = "ADMIN")]
     [Route("api/[controller]")]
     [ApiController]
-    public class ClientsController : ControllerBase
+    public class TenantsController : ControllerBase
     {
-        private readonly ClientsService clientsService;
+        private readonly TenantsService tenantsService;
 
-        public ClientsController(ClientsService clientsService)
+        public TenantsController(TenantsService tenantService)
         {
-            this.clientsService = clientsService;
+            this.tenantsService = tenantService;
         }
         [HttpGet]
         public async Task<IActionResult> GetAsync()
         {
-            var list = await clientsService.GetAllAsync();
+            var list = await tenantsService.GetAllAsync();
             return Ok(list);
         }
         [HttpPost]
-        public async Task<IActionResult> PostAsync([FromBody] ClientRequestModel model)
+        public async Task<IActionResult> PostAsync([FromBody] TenantRequestModel model)
         {
-            var result = await clientsService.CreateAsync(model);
+            var result = await tenantsService.CreateAsync(model);
             return Ok(result);
         }
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutAsync([FromRoute] string id, [FromBody] ClientRequestModel model)
+        public async Task<IActionResult> PutAsync([FromRoute] string id, [FromBody] TenantRequestModel model)
         {
-            var result = await clientsService.UpdateAsync(id, model);
+            var result = await tenantsService.UpdateAsync(id, model);
             return Ok(result);
         }
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteAsync([FromRoute] string id)
         {
-            await clientsService.DeleteAsync(id);
+            await tenantsService.DeleteAsync(id);
             return Ok("Item deleted successfully");
         }
     }

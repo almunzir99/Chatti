@@ -8,6 +8,5 @@ namespace Chatti.Entities
         public required ObjectId ChatRoomId { get; set; }
         public required MessageSender Sender { get; set; }
         public MessageAttachment? Attachment { get; set; }
-
     }
 }

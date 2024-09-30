@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Chatti.Models
+namespace Chatti.Entities
 {
-    public class ClientRequestModel
+    public class Tenant : EntityBase
     {
-        public required string ClientName { get; set; }
+        public required string TenantName { get; set; }
     }
 }

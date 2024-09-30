@@ -10,6 +10,6 @@ namespace Chatti.Models.Users
     {
         public required string UserName { get; set; }
         public required string Password { get; set; }
-        public String? SystemId { get; set; }
+        public string? TenantId { get; set; }
     }
 }

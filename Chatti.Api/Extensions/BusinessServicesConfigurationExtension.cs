@@ -9,7 +9,7 @@ namespace Chatti.Api.Extensions
         public static void AddBusinessServices(this IServiceCollection services)
         {
             services.AddScoped<UsersService>();
-            services.AddScoped<ClientsService>();
+            services.AddScoped<TenantsService>();
             services.AddScoped<IChatRoomService, ChatRoomService>();
             services.AddScoped<IMessagesService, MessagesService>();
 

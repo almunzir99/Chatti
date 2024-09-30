@@ -15,7 +15,7 @@ namespace Chatti.Persistence.Database
 
         }
         public DbSet<User> Users { get; init; }
-        public DbSet<Client> Clients { get; init; }
+        public DbSet<Tenant> Tenants { get; init; }
         public DbSet<ChatRoom> ChatRooms { get; init; }
         public DbSet<Message> Messages { get; init; }
 
@@ -23,7 +23,7 @@ namespace Chatti.Persistence.Database
         {
             base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<User>();
-            modelBuilder.Entity<Client>();
+            modelBuilder.Entity<Tenant>();
             modelBuilder.Entity<ChatRoom>();
             modelBuilder.Entity<Message>();
         }

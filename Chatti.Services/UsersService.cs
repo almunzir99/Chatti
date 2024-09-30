@@ -35,7 +35,7 @@ namespace Chatti.Services
             var result = HashingHelper.VerifyPassword(model.Password, user.PasswordHash!, user.PasswordSalt!);
             if (!result)
                 throw new Exception("invalid password");
-            if (model.SystemId != null && !user.ClientId.ToString().Equals(model.SystemId))
+            if (model.TenantId != null && !user.TenantId.ToString().Equals(model.TenantId))
                 throw new Exception("invalid system id");
             var mappedUser = _mapper.Map<UserResponseModel>(user);
             mappedUser.Token = GenerateToken(user);
@@ -48,9 +48,9 @@ namespace Chatti.Services
                 .FirstOrDefaultAsync(x => x.Username == model.Username);
             if (target != null)
                 throw new Exception("Username is already used");
-            var client = await _dbContext.Clients.FirstOrDefaultAsync(x => x.Id.ToString().Equals(model.ClientId));
-            if (client == null)
-                throw new Exception("Invalid clientId");
+            var tenant = await _dbContext.Tenants.FirstOrDefaultAsync(x => x.Id.ToString().Equals(model.TenantId));
+            if (tenant == null)
+                throw new Exception("Invalid tenantId");
             byte[] passwordSalt = [];
             byte[] passwordHash = [];
             HashingHelper.CreateHashPassword(model.Password, out passwordHash, out passwordSalt);
@@ -61,7 +61,7 @@ namespace Chatti.Services
                 Username = model.Username,
                 FullName = model.FullName,
                 Email = model.Email,
-                ClientId = new MongoDB.Bson.ObjectId(model.ClientId),
+                TenantId = new MongoDB.Bson.ObjectId(model.TenantId),
                 Type = Core.Enums.UserType.USER,
                 
 
