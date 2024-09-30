@@ -35,8 +35,8 @@ namespace Chatti.Services
             var result = HashingHelper.VerifyPassword(model.Password, user.PasswordHash!, user.PasswordSalt!);
             if (!result)
                 throw new Exception("invalid password");
-            if (model.TenantId != null && !user.TenantId.ToString().Equals(model.TenantId))
-                throw new Exception("invalid system id");
+            if (user.Type != Core.Enums.UserType.ADMIN && (model.TenantId == null || !user.TenantId.ToString().Equals(model.TenantId)))
+                throw new Exception("invalid Tenant id");
             var mappedUser = _mapper.Map<UserResponseModel>(user);
             mappedUser.Token = GenerateToken(user);
             return mappedUser;
@@ -63,7 +63,7 @@ namespace Chatti.Services
                 Email = model.Email,
                 TenantId = new MongoDB.Bson.ObjectId(model.TenantId),
                 Type = Core.Enums.UserType.USER,
-                
+
 
             };
             await _dbContext.Users.AddAsync(newUser);
@@ -98,7 +98,7 @@ namespace Chatti.Services
         public async Task<List<UserResponseModel>> GetUsersListAsync(string? CurrentUserId = null)
         {
             var users = await _dbContext.Users
-                .Where(x =>x.Status == Core.Enums.StatusEnum.Active)
+                .Where(x => x.Status == Core.Enums.StatusEnum.Active)
                 .Where(x => x.Type == Core.Enums.UserType.USER)
                 .Where(x => CurrentUserId == null || !x.Id.ToString().Equals(CurrentUserId)).ToListAsync();
             return _mapper.Map<List<UserResponseModel>>(users);
