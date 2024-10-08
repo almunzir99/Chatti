@@ -8,5 +8,7 @@ namespace Chatti.Entities.Messages
         public required ObjectId ChatRoomId { get; set; }
         public required MessageSender Sender { get; set; }
         public MessageAttachment? Attachment { get; set; }
+        public List<MessageSeenBy> seenBy = new();
+
     }
 }

@@ -2,6 +2,7 @@
 using Chatti.Entities.ChatRooms;
 using Chatti.Entities.Users;
 using Chatti.Models.ChatRooms;
+using Chatti.Models.Messages;
 using Chatti.Models.Users;
 using Chatti.Persistence.Database;
 using Microsoft.EntityFrameworkCore;
@@ -74,7 +75,7 @@ namespace Chatti.Services.ChatRooms
                 .Where(x => chatrooms.SelectMany(x => x.Participants).Any(d => d.UserId.Equals(x.Id))).ToListAsync();
             // distribute each user for each chat room 
             var result = chatrooms.Select(x =>
-            { 
+            {
                 List<User> chatroomUsers = users.Where(u => x.Participants.Any(p => p.UserId.Equals(u.Id))).ToList();
                 return new ChatRoomResponseModel()
                 {
@@ -84,6 +85,23 @@ namespace Chatti.Services.ChatRooms
                 };
             }).ToList();
             return result;
+        }
+        public async Task SeeMessagesAsync(string chatroomId, string userId)
+        {
+            var messages = await dbContext.Messages.Where(x => x.Status == Core.Enums.StatusEnum.Active)
+                .Where(x => x.ChatRoomId.ToString().Equals(chatroomId))
+                .Where(x => !x.seenBy.Any(x => x.UserId.Equals(userId)))
+                .Where(x => !x.Sender.UserId.Equals(userId))
+                .ToListAsync();
+            foreach (var message in messages)
+            {
+                message.seenBy.Add(new Entities.Messages.MessageSeenBy()
+                {
+                    SeenAt = DateTime.Now,
+                    UserId = new MongoDB.Bson.ObjectId(userId)
+                });
+            }
+
         }
     }
 }
