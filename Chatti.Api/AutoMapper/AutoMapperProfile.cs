@@ -1,6 +1,9 @@
 ﻿using AutoMapper;
 using Chatti.Core.Enums;
-using Chatti.Entities;
+using Chatti.Entities.ChatRooms;
+using Chatti.Entities.Messages;
+using Chatti.Entities.Tenants;
+using Chatti.Entities.Users;
 using Chatti.Models;
 using Chatti.Models.ChatRooms;
 using Chatti.Models.Messages;

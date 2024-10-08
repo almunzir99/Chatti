@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using Chatti.Core.Helpers;
-using Chatti.Entities;
+using Chatti.Entities.Users;
 using Chatti.Models.Users;
 using Chatti.Persistence.Database;
 using Microsoft.EntityFrameworkCore;

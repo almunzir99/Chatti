@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using Chatti.Entities;
+using Chatti.Entities.Tenants;
 using Chatti.Models;
 using Chatti.Persistence.Database;
 using Microsoft.EntityFrameworkCore;

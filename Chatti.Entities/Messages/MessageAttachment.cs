@@ -1,6 +1,6 @@
 ﻿using Chatti.Core.Enums;
 
-namespace Chatti.Entities
+namespace Chatti.Entities.Messages
 {
     public class MessageAttachment
     {

@@ -1,4 +1,7 @@
-﻿using Chatti.Entities;
+﻿using Chatti.Entities.ChatRooms;
+using Chatti.Entities.Messages;
+using Chatti.Entities.Tenants;
+using Chatti.Entities.Users;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;

@@ -17,7 +17,7 @@ namespace Chatti.Persistence.Database
                 byte[] passwordHash = [];
                 HashingHelper.CreateHashPassword("@dm1n2012", out passwordHash, out passwordSalt);
 
-                await context.Users.AddAsync(new Entities.User()
+                await context.Users.AddAsync(new Entities.Users.User()
                 {
                     FullName = "Admin",
                     Username = "admin",

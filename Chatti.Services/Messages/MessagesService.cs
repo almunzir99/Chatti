@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using Chatti.Entities;
+using Chatti.Entities.Messages;
 using Chatti.Models.Messages;
 using Chatti.Models.Users;
 using Chatti.Persistence.Database;

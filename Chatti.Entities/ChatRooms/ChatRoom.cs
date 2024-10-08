@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Chatti.Entities
+namespace Chatti.Entities.ChatRooms
 {
     public class ChatRoom : EntityBase
     {

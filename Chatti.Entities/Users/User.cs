@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Chatti.Entities
+namespace Chatti.Entities.Users
 {
     public class User : EntityBase
     {
