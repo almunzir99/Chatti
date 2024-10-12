@@ -1,6 +1,4 @@
-﻿using Chatti.Models.Users;
-
-namespace Chatti.Models.Messages
+﻿namespace Chatti.Models.Messages
 {
     public class MessageResponseModel
     {
@@ -10,6 +8,7 @@ namespace Chatti.Models.Messages
         public string? ChatRoomId { get; set; }
         public MessageAttachmentModel? Attachment { get; set; }
         public DateTime SentAt { get; set; }
+        public List<MessageSeenByResponse> SeenBy { get; set; } = new();
 
     }
 }

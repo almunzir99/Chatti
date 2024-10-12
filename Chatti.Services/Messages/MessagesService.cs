@@ -44,7 +44,12 @@ namespace Chatti.Services.Messages
             var chatroom = await dbContext.ChatRooms.FirstOrDefaultAsync(x => x.Id.ToString().Equals(model.ChatRoomId) && x.Participants.Any(p => p.UserId.ToString().Equals(senderId)));
             if (chatroom == null)
                 throw new Exception("Invalid chatroom id");
+            message.SeenBy.Add(new MessageSeenBy()
+            {
+                SeenAt = DateTime.Now,
+                UserId = new MongoDB.Bson.ObjectId(senderId)
 
+            });
             message.Sender = mapper.Map<MessageSender>(sender);
             message.Sender.UserId = senderId;
             await dbContext.Messages.AddAsync(message);

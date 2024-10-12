@@ -12,6 +12,6 @@ namespace Chatti.Services.ChatRooms
         Task<ChatRoomResponseModel> CreateAsync(ChatRoomRequestModel model);
         Task<List<ChatRoomResponseModel>> ListByUserId(string UserId);
         Task DeleteAsync(string ChatRoomId);
-        Task SeeMessagesAsync(string chatroomId, string userId);
+        Task<ChatRoomResponseModel> GetById(string chatroomId, string userId);
     }
 }

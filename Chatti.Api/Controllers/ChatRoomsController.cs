@@ -23,10 +23,17 @@ namespace Chatti.Api.Controllers
             var result = await chatRoomService.CreateAsync(model);
             return Ok(result);
         }
-        [HttpGet("get")]
+        [HttpGet()]
         public async Task<IActionResult> GetChatRoomsListAsync()
         {
             var result = await chatRoomService.ListByUserId(CurrentUserId);
+            return Ok(result);
+        }
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetChatRoomById([FromRoute] string id)
+        {
+
+            var result = await chatRoomService.GetById(id, CurrentUserId);
             return Ok(result);
         }
     }

@@ -86,22 +86,29 @@ namespace Chatti.Services.ChatRooms
             }).ToList();
             return result;
         }
-        public async Task SeeMessagesAsync(string chatroomId, string userId)
+        public async Task<ChatRoomResponseModel> GetById(string chatroomId, string userId)
         {
             var messages = await dbContext.Messages.Where(x => x.Status == Core.Enums.StatusEnum.Active)
                 .Where(x => x.ChatRoomId.ToString().Equals(chatroomId))
-                .Where(x => !x.seenBy.Any(x => x.UserId.Equals(userId)))
-                .Where(x => !x.Sender.UserId.Equals(userId))
+                .Where(x => !x.SeenBy.Any(x => x.UserId.ToString().Equals(userId)))
+                .Where(x => !x.Sender.UserId.Equals(userId)).AsTracking()
                 .ToListAsync();
+            var chatroom = await dbContext.ChatRooms.FirstOrDefaultAsync(x => x.Id.ToString().Equals(chatroomId));
             foreach (var message in messages)
             {
-                message.seenBy.Add(new Entities.Messages.MessageSeenBy()
+                message.SeenBy.Add(new Entities.Messages.MessageSeenBy()
                 {
                     SeenAt = DateTime.Now,
                     UserId = new MongoDB.Bson.ObjectId(userId)
                 });
             }
-
+            dbContext.ChangeTracker.DetectChanges();
+            await dbContext.SaveChangesAsync(); 
+            return new ChatRoomResponseModel()
+            {
+                Id = chatroomId,
+                Name = chatroom!.Name
+            };
         }
     }
 }
