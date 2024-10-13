@@ -10,6 +10,5 @@ namespace Chatti.Models.ChatRooms
     {
         public required string Name { get; set; }
         public List<string> Participants { get; set; } = new();
-        public required string AdminId { get; set; }
     }
 }

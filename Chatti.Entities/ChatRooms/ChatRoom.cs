@@ -11,5 +11,6 @@ namespace Chatti.Entities.ChatRooms
     {
         public required string Name { get; set; }
         public IList<ChatRoomParticipant> Participants { get; set; } = new List<ChatRoomParticipant>();
+        public required ObjectId TenantId { get; set; } = new ObjectId();
     }
 }

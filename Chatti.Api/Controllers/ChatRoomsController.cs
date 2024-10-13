@@ -19,8 +19,10 @@ namespace Chatti.Api.Controllers
         [HttpPost("create")]
         public async Task<IActionResult> CreateChatRoomAsync([FromBody] ChatRoomRequestModel model)
         {
-            model.AdminId = CurrentUserId;
-            var result = await chatRoomService.CreateAsync(model);
+            Request.Headers.TryGetValue("TenantId", out var tenantId);
+            if (!model.Participants.Any())
+                throw new Exception("You can't create empty chatroom");
+            var result = await chatRoomService.CreateAsync(CurrentUserId, tenantId!, model);
             return Ok(result);
         }
         [HttpGet()]

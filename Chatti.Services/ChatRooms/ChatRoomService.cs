@@ -26,23 +26,24 @@ namespace Chatti.Services.ChatRooms
             _mapper = mapper;
         }
 
-        public async Task<ChatRoomResponseModel> CreateAsync(ChatRoomRequestModel model)
+        public async Task<ChatRoomResponseModel> CreateAsync(string adminId, string tenantId, ChatRoomRequestModel model)
         {
-            if (!model.Participants.Any(x => x == model.AdminId))
-                model.Participants.Add(model.AdminId);
+            if (!model.Participants.Any(x => x == adminId))
+                model.Participants.Add(adminId);
             var entity = new ChatRoom()
             {
                 Name = model.Name,
                 CreatedOn = DateTime.Now,
                 ModifiedOn = DateTime.Now,
                 Status = Core.Enums.StatusEnum.Active,
+                TenantId = new MongoDB.Bson.ObjectId(tenantId),
 
             };
             await dbContext.ChatRooms.AddAsync(entity);
             entity.Participants = model.Participants.Select(x => new ChatRoomParticipant()
             {
                 UserId = new MongoDB.Bson.ObjectId(x),
-                IsAdmin = model.AdminId.Equals(x),
+                IsAdmin = adminId.Equals(x),
 
             }).ToList();
             dbContext.ChangeTracker.DetectChanges();
@@ -103,7 +104,7 @@ namespace Chatti.Services.ChatRooms
                 });
             }
             dbContext.ChangeTracker.DetectChanges();
-            await dbContext.SaveChangesAsync(); 
+            await dbContext.SaveChangesAsync();
             return new ChatRoomResponseModel()
             {
                 Id = chatroomId,
