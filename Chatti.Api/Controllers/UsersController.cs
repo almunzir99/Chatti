@@ -17,13 +17,15 @@ namespace Chatti.Api.Controllers
         [HttpPost("authenticate")]
         public async Task<IActionResult> AuthenticateAsync([FromBody] AuthenticationModel model)
         {
-            var user = await userService.Authenticate(model);
+            Request.Headers.TryGetValue("TenantId", out var tenantId);
+            var user = await userService.Authenticate(tenantId, model);
             return Ok(user);
         }
         [HttpPost("register")]
         public async Task<IActionResult> RegisterAsync([FromBody] UserRequestModel model)
         {
-            var user = await userService.Register(model);
+            Request.Headers.TryGetValue("TenantId", out var tenantId);
+            var user = await userService.Register(tenantId, model);
             return Ok(user);
         }
         [Authorize]

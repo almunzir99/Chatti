@@ -24,7 +24,7 @@ namespace Chatti.Services
             _mapper = mapper;
         }
 
-        public async Task<UserResponseModel> Authenticate(AuthenticationModel model)
+        public async Task<UserResponseModel> Authenticate(string? tenantId, AuthenticationModel model)
         {
             var user = await _dbContext.Users.FirstOrDefaultAsync(x => x.Username == model.UserName);
             if (user == null)
@@ -35,20 +35,20 @@ namespace Chatti.Services
             var result = HashingHelper.VerifyPassword(model.Password, user.PasswordHash!, user.PasswordSalt!);
             if (!result)
                 throw new Exception("invalid password");
-            if (user.Type != Core.Enums.UserType.ADMIN && (model.TenantId == null || !user.TenantId.ToString().Equals(model.TenantId)))
+            if (user.Type != Core.Enums.UserType.ADMIN && (tenantId == null || !user.TenantId.ToString().Equals(tenantId)))
                 throw new Exception("invalid Tenant id");
             var mappedUser = _mapper.Map<UserResponseModel>(user);
             mappedUser.Token = GenerateToken(user);
             return mappedUser;
 
         }
-        public async Task<UserResponseModel> Register(UserRequestModel model)
+        public async Task<UserResponseModel> Register(string? tenantId, UserRequestModel model)
         {
             var target = await _dbContext.Users.Where(x => x.Status == Core.Enums.StatusEnum.Active)
                 .FirstOrDefaultAsync(x => x.Username == model.Username);
             if (target != null)
                 throw new Exception("Username is already used");
-            var tenant = await _dbContext.Tenants.FirstOrDefaultAsync(x => x.Id.ToString().Equals(model.TenantId));
+            var tenant = await _dbContext.Tenants.FirstOrDefaultAsync(x => x.Id.ToString().Equals(tenantId));
             if (tenant == null)
                 throw new Exception("Invalid tenantId");
             byte[] passwordSalt = [];
@@ -61,7 +61,7 @@ namespace Chatti.Services
                 Username = model.Username,
                 FullName = model.FullName,
                 Email = model.Email,
-                TenantId = new MongoDB.Bson.ObjectId(model.TenantId),
+                TenantId = new MongoDB.Bson.ObjectId(tenantId),
                 Type = Core.Enums.UserType.USER,
 
 

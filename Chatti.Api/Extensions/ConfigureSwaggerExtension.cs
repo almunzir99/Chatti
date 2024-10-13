@@ -1,4 +1,5 @@
-﻿using Microsoft.OpenApi.Models;
+﻿using Chatti.Api.Configurations;
+using Microsoft.OpenApi.Models;
 
 namespace Chatti.Api.Extensions
 {
@@ -22,6 +23,7 @@ namespace Chatti.Api.Extensions
                     In = ParameterLocation.Header,
                     Description = "JWT Authorization header using the Bearer scheme. \r\n\r\n Enter 'Bearer' [space] and then your token in the text input below.",
                 });
+                c.OperationFilter<SwaggerHeaderOperationFilter>();
                 c.AddSecurityRequirement(new OpenApiSecurityRequirement {
         {
             new OpenApiSecurityScheme {
