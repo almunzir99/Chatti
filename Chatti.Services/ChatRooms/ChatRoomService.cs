@@ -87,29 +87,29 @@ namespace Chatti.Services.ChatRooms
             }).ToList();
             return result;
         }
-        public async Task<ChatRoomResponseModel> GetById(string chatroomId, string userId)
+        public async Task<ChatRoomResponseModel> GetById(string chatroomId)
         {
-            var messages = await dbContext.Messages.Where(x => x.Status == Core.Enums.StatusEnum.Active)
-                .Where(x => x.ChatRoomId.ToString().Equals(chatroomId))
-                .Where(x => !x.SeenBy.Any(x => x.UserId.ToString().Equals(userId)))
-                .Where(x => !x.Sender.UserId.Equals(userId)).AsTracking()
-                .ToListAsync();
             var chatroom = await dbContext.ChatRooms.FirstOrDefaultAsync(x => x.Id.ToString().Equals(chatroomId));
-            foreach (var message in messages)
+            if (chatroom == null)
             {
-                message.SeenBy.Add(new Entities.Messages.MessageSeenBy()
-                {
-                    SeenAt = DateTime.Now,
-                    UserId = new MongoDB.Bson.ObjectId(userId)
-                });
+                throw new Exception("Invalid chatroom id");
             }
-            dbContext.ChangeTracker.DetectChanges();
-            await dbContext.SaveChangesAsync();
+
             return new ChatRoomResponseModel()
             {
                 Id = chatroomId,
                 Name = chatroom!.Name
             };
+        }
+
+        public Task JoinAsync(string userId, string chatroomId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task LeaveAsync(string userId, string chatroomId)
+        {
+            throw new NotImplementedException();
         }
     }
 }

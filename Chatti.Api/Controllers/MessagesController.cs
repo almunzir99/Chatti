@@ -30,7 +30,7 @@ namespace Chatti.Api.Controllers
         [HttpGet("{chatroomId}")]
         public async Task<IActionResult> GetMessagesAsync([FromRoute] string chatroomId)
         {
-            var messages = await service.ListAsync(chatroomId);
+            var messages = await service.ListAsync(CurrentUserId, chatroomId);
             return Ok(messages);
         }
         [HttpPut("{messageId}")]
@@ -46,6 +46,12 @@ namespace Chatti.Api.Controllers
             await service.DeleteAsync(CurrentUserId, messageId);
             return Ok("Message deleted successfully");
 
+        }
+        [HttpGet("{messageId}/info")]
+        public async Task<IActionResult> GetMessageAsync([FromRoute] string messageId)
+        {
+            var result = await service.GetMessageInfoAsync(CurrentUserId, messageId);
+            return Ok(result);
         }
         private async Task<MessageAttachmentModel> UploadAsync(IFormFile file, string senderId, MessageRequestModel model)
         {

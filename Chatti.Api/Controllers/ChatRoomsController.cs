@@ -35,7 +35,7 @@ namespace Chatti.Api.Controllers
         public async Task<IActionResult> GetChatRoomById([FromRoute] string id)
         {
 
-            var result = await chatRoomService.GetById(id, CurrentUserId);
+            var result = await chatRoomService.GetById(id);
             return Ok(result);
         }
     }
