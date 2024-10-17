@@ -102,14 +102,62 @@ namespace Chatti.Services.ChatRooms
             };
         }
 
-        public Task JoinAsync(string userId, string chatroomId)
+        public async Task AddParticipantAsync(string adminId, string userId, string chatroomId)
         {
-            throw new NotImplementedException();
+            var chatroom = await dbContext.ChatRooms
+                .Where(x => x.Status == Core.Enums.StatusEnum.Active)
+                .Where(x => x.Id.ToString().Equals(chatroomId))
+                .Where(x => x.Participants.Any(x => x.IsAdmin && x.UserId.ToString().Equals(adminId)))
+                .FirstOrDefaultAsync();
+            if (chatroom == null) { throw new Exception("Invalid chatroom id"); }
+            if (chatroom.Participants.Any(x => x.UserId.ToString().Equals(userId)))
+            {
+                throw new Exception("The new user is already participant in chatroom ");
+            }
+            chatroom.Participants.Add(new ChatRoomParticipant()
+            {
+                IsAdmin = false,
+                UserId = new MongoDB.Bson.ObjectId(userId)
+            });
+            dbContext.ChangeTracker.DetectChanges();
+            await dbContext.SaveChangesAsync();
         }
 
-        public Task LeaveAsync(string userId, string chatroomId)
+        public async Task RemoveParticipantAsync(string adminId, string userId, string chatroomId)
         {
-            throw new NotImplementedException();
+            var chatroom = await dbContext.ChatRooms
+              .Where(x => x.Status == Core.Enums.StatusEnum.Active)
+              .Where(x => x.Id.ToString().Equals(chatroomId))
+              .Where(x => x.Participants.Any(x => x.IsAdmin && x.UserId.ToString().Equals(adminId)))
+              .FirstOrDefaultAsync();
+            if (chatroom == null) { throw new Exception("Invalid chatroom id"); }
+
+            var target = chatroom.Participants.FirstOrDefault(x => x.UserId.ToString().Equals(userId));
+            if (target == null)
+            {
+                throw new Exception("The target participant isn't available");
+            }
+            chatroom.Participants.Remove(target);
+            dbContext.ChangeTracker.DetectChanges();
+            await dbContext.SaveChangesAsync();
+        }
+
+        public async Task LeaveAsync(string userId, string chatroomId)
+        {
+            var chatroom = await dbContext.ChatRooms
+               .Where(x => x.Status == Core.Enums.StatusEnum.Active)
+               .Where(x => x.Id.ToString().Equals(chatroomId))
+               .FirstOrDefaultAsync();
+            if (chatroom == null) { throw new Exception("Invalid chatroom id"); }
+
+            var target = chatroom.Participants.FirstOrDefault(x => x.UserId.ToString().Equals(userId));
+            if (target == null)
+            {
+                throw new Exception("The target participant isn't available");
+            }
+            chatroom.Participants.Remove(target);
+            dbContext.ChangeTracker.DetectChanges();
+            await dbContext.SaveChangesAsync();
         }
     }
 }

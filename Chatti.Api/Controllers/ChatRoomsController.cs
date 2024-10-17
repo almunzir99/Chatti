@@ -25,7 +25,7 @@ namespace Chatti.Api.Controllers
             var result = await chatRoomService.CreateAsync(CurrentUserId, tenantId!, model);
             return Ok(result);
         }
-        [HttpGet()]
+        [HttpGet]
         public async Task<IActionResult> GetChatRoomsListAsync()
         {
             var result = await chatRoomService.ListByUserId(CurrentUserId);
@@ -37,6 +37,35 @@ namespace Chatti.Api.Controllers
 
             var result = await chatRoomService.GetById(id);
             return Ok(result);
+        }
+        [HttpGet("{chatroomId}/participants/add/${userId}")]
+        public async Task<IActionResult> AddParticipantChatRoomAsync([FromRoute] string chatroomId, string userId)
+        {
+            await chatRoomService.AddParticipantAsync(CurrentUserId, userId, chatroomId);
+            return Ok(new
+            {
+                Message = "Participant added successfully"
+            });
+        }
+        [HttpDelete("{chatroomId}/participants/remove/${userId}")]
+        public async Task<IActionResult> DeleteParticipantChatRoomAsync([FromRoute] string chatroomId, string userId)
+        {
+            await chatRoomService.RemoveParticipantAsync(CurrentUserId, userId, chatroomId);
+            return Ok(new
+            {
+                Message = "Participant removed successfully"
+            });
+        }
+        [HttpDelete("{chatroomId}/participants/leave")]
+        public async Task<IActionResult> LeaveChatRoomAsync([FromRoute] string chatroomId, string userId)
+        {
+            if (userId == CurrentUserId)
+                return Forbid("You aren't allowed to do this operation");
+            await chatRoomService.LeaveAsync(chatroomId, userId);
+            return Ok(new
+            {
+                Message = "you left the chatroom successfully"
+            });
         }
     }
 }

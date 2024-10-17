@@ -100,7 +100,6 @@ namespace Chatti.Services.Messages
             var message = await dbContext.Messages
                 .Where(x => x.Status == Core.Enums.StatusEnum.Active)
                 .FirstOrDefaultAsync(x =>
-            x.Sender.UserId.Equals(senderId) &&
             x.Id.ToString().Equals(messageId));
             if (message == null)
                 throw new Exception("Invalid message or user id");
