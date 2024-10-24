@@ -26,7 +26,7 @@ namespace Chatti.Services.ChatRooms
             _mapper = mapper;
         }
 
-        public async Task<ChatRoomResponseModel> CreateAsync(string adminId, string tenantId, ChatRoomRequestModel model)
+        public async Task<ChatRoomDetailReponseModel> CreateAsync(string adminId, string tenantId, ChatRoomRequestModel model)
         {
             if (!model.Participants.Any(x => x == adminId))
                 model.Participants.Add(adminId);
@@ -37,6 +37,10 @@ namespace Chatti.Services.ChatRooms
                 ModifiedOn = DateTime.Now,
                 Status = Core.Enums.StatusEnum.Active,
                 TenantId = new MongoDB.Bson.ObjectId(tenantId),
+                Settings = new ChatRoomSettings()
+                {
+                    ReceiveNotifications = true,
+                }
 
             };
             await dbContext.ChatRooms.AddAsync(entity);
@@ -49,7 +53,7 @@ namespace Chatti.Services.ChatRooms
             dbContext.ChangeTracker.DetectChanges();
             await dbContext.SaveChangesAsync();
             var loadedParticipants = await dbContext.Users.Where(x => model.Participants.Contains(x.Id.ToString())).ToListAsync();
-            var result = new ChatRoomResponseModel()
+            var result = new ChatRoomDetailReponseModel()
             {
                 Id = entity.Id.ToString(),
                 Name = model.Name,
@@ -71,34 +75,60 @@ namespace Chatti.Services.ChatRooms
             var chatrooms = await dbContext.ChatRooms
                 .Where(x => x.Status == Core.Enums.StatusEnum.Active)
                 .Where(x => x.Participants.Any(x => x.UserId.ToString().Equals(UserId))).ToListAsync();
-            // fetch users
-            var users = await dbContext.Users.Where(x => x.Status == Core.Enums.StatusEnum.Active)
-                .Where(x => chatrooms.SelectMany(x => x.Participants).Any(d => d.UserId.Equals(x.Id))).ToListAsync();
-            // distribute each user for each chat room 
+            var chatroomIds = chatrooms.Select(x => x.Id).ToList();
+            var lastMessages = (await dbContext.Messages
+                .Where(x => x.Status == Core.Enums.StatusEnum.Active)
+                .Where(x => chatroomIds.Any(c => c.Equals(x.ChatRoomId))).ToListAsync())
+
+                .GroupBy(x => x.ChatRoomId).Select(x => new
+                {
+                    x.First().ChatRoomId,
+                    Message = x.OrderByDescending(x => x.CreatedOn).First()
+                }).ToList();
+
+
             var result = chatrooms.Select(x =>
             {
-                List<User> chatroomUsers = users.Where(u => x.Participants.Any(p => p.UserId.Equals(u.Id))).ToList();
+                var message = lastMessages.FirstOrDefault(m => m.ChatRoomId.Equals(x.Id))?.Message;
                 return new ChatRoomResponseModel()
                 {
-                    Participants = _mapper.Map<List<UserResponseModel>>(chatroomUsers),
                     Name = x.Name,
                     Id = x.Id.ToString(),
+                    LastMessage = message?.Content,
                 };
             }).ToList();
             return result;
         }
-        public async Task<ChatRoomResponseModel> GetById(string chatroomId)
+        public async Task<ChatRoomDetailReponseModel> GetById(string chatroomId)
         {
-            var chatroom = await dbContext.ChatRooms.FirstOrDefaultAsync(x => x.Id.ToString().Equals(chatroomId));
+            // get chat room
+            var chatroom = await dbContext.ChatRooms.Where(x => x.Status == Core.Enums.StatusEnum.Active)
+                .FirstOrDefaultAsync(x => x.Id.ToString().Equals(chatroomId));
             if (chatroom == null)
             {
                 throw new Exception("Invalid chatroom id");
             }
+            // get participant users response
+            var users = await dbContext.Users
+                .Where(x => x.Status == Core.Enums.StatusEnum.Active)
+                .Where(user => chatroom.Participants.Any(x => x.UserId.Equals(user.Id))).ToListAsync();
 
-            return new ChatRoomResponseModel()
+            // get attachments
+            var messages = await dbContext.Messages
+                .Where(x => x.Status == Core.Enums.StatusEnum.Active)
+                .Where(x => x.Attachment != null)
+                .Where(x => x.ChatRoomId.ToString().Equals(chatroomId))
+                .AsNoTracking()
+                .ToListAsync();
+
+            // get 
+            return new ChatRoomDetailReponseModel()
             {
                 Id = chatroomId,
-                Name = chatroom!.Name
+                Name = chatroom!.Name,
+                Participants = _mapper.Map<List<UserResponseModel>>(users),
+                Attachments = _mapper.Map<List<MessageAttachmentModel>>(messages.Select(x => x.Attachment).ToList()),
+                Settings = _mapper.Map<ChatRoomSettingsResponseModel>(chatroom.Settings)
             };
         }
 
