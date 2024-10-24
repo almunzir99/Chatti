@@ -3,6 +3,7 @@ using Chatti.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel.DataAnnotations;
 
 namespace Chatti.Api.Controllers
 {
@@ -35,6 +36,13 @@ namespace Chatti.Api.Controllers
             string? userId = CurrentUserType == "ADMIN" ? null : CurrentUserId;
             var users = await userService.GetUsersListAsync(userId);
             return Ok(users);
+        }
+        [Authorize(Roles = "ADMIN")]
+        [HttpGet("{userId}/password-reset")]
+        public async Task<IActionResult> ResetPasswordAsync([FromRoute] string userId, [Required][FromQuery] string password)
+        {
+            await userService.ResetPassword(userId,password);
+            return Ok("password has been resetted successfully");
         }
     }
 }

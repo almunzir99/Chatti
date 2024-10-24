@@ -51,9 +51,8 @@ namespace Chatti.Services
             var tenant = await _dbContext.Tenants.FirstOrDefaultAsync(x => x.Id.ToString().Equals(tenantId));
             if (tenant == null)
                 throw new Exception("Invalid tenantId");
-            byte[] passwordSalt = [];
-            byte[] passwordHash = [];
-            HashingHelper.CreateHashPassword(model.Password, out passwordHash, out passwordSalt);
+
+            HashingHelper.CreateHashPassword(model.Password, out var passwordHash, out var passwordSalt);
             var newUser = new User()
             {
                 PasswordHash = passwordHash,
@@ -71,6 +70,24 @@ namespace Chatti.Services
             UserResponseModel userResponseModel = _mapper.Map<UserResponseModel>(newUser);
             userResponseModel.Token = GenerateToken(newUser);
             return userResponseModel;
+        }
+
+
+        public async Task ResetPassword(string userId, string newPassword)
+        {
+            var user = await _dbContext.Users.FirstOrDefaultAsync(x => x.Id.ToString().Equals(userId));
+            if (user == null) throw new Exception("Invalid user id");
+            HashingHelper.CreateHashPassword(newPassword, out var passwordHash, out var passwordSalt);
+            user.PasswordHash = passwordHash;
+            user.PasswordSalt = passwordSalt;
+            await _dbContext.SaveChangesAsync();
+        }
+        public async Task DeleteAsync(string userId)
+        {
+            var user = await _dbContext.Users.FirstOrDefaultAsync(x => x.Id.ToString().Equals(userId));
+            if (user == null) throw new Exception("Invalid user id");
+            user.Status = Core.Enums.StatusEnum.Deleted;
+            await _dbContext.SaveChangesAsync();
         }
 
         private string GenerateToken(User user)
