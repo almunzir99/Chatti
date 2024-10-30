@@ -4,9 +4,9 @@ using Chatti.Entities.ChatRooms;
 using Chatti.Entities.Messages;
 using Chatti.Entities.Tenants;
 using Chatti.Entities.Users;
-using Chatti.Models;
 using Chatti.Models.ChatRooms;
 using Chatti.Models.Messages;
+using Chatti.Models.Tenants;
 using Chatti.Models.Users;
 
 namespace Chatti.Api.AutoMapper

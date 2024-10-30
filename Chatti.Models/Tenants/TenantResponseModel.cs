@@ -1,4 +1,4 @@
-﻿namespace Chatti.Models
+﻿namespace Chatti.Models.Tenants
 {
     public class TenantResponseModel
     {

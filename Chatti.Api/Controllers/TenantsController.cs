@@ -1,4 +1,4 @@
-﻿using Chatti.Models;
+﻿using Chatti.Models.Tenants;
 using Chatti.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
