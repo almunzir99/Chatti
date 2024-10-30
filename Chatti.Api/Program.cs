@@ -1,6 +1,7 @@
 
 using Chatti.Api.AutoMapper;
 using Chatti.Api.Extensions;
+using Chatti.Api.Middlewares;
 using Chatti.Core.Settings;
 using Chatti.Persistence.Database;
 using Microsoft.EntityFrameworkCore;
@@ -31,6 +32,8 @@ builder.Services.AddBusinessServices();
 // Configure the HTTP request pipeline.
 
 var app = builder.Build();
+// add Error Handling Middleware
+app.UseErrorHandlingMiddleware();
 app.UseRouting();
 // run database seed 
 if (app.Environment.IsDevelopment())
