@@ -79,22 +79,24 @@ namespace Chatti.Services.ChatRooms
             var lastMessages = (await dbContext.Messages
                 .Where(x => x.Status == Core.Enums.StatusEnum.Active)
                 .Where(x => chatroomIds.Any(c => c.Equals(x.ChatRoomId))).ToListAsync())
-
                 .GroupBy(x => x.ChatRoomId).Select(x => new
                 {
                     x.First().ChatRoomId,
-                    Message = x.OrderByDescending(x => x.CreatedOn).First()
+                    Message = x.OrderByDescending(x => x.CreatedOn).First(),
+                    UnreadMessagesCount = x.Where(x => !x.SeenBy.Any(x => x.UserId.ToString().Equals(UserId))).Count()
                 }).ToList();
 
 
             var result = chatrooms.Select(x =>
             {
-                var message = lastMessages.FirstOrDefault(m => m.ChatRoomId.Equals(x.Id))?.Message;
+                var message = lastMessages.FirstOrDefault(m => m.ChatRoomId.Equals(x.Id));
                 return new ChatRoomResponseModel()
                 {
                     Name = x.Name,
                     Id = x.Id.ToString(),
-                    LastMessage = message?.Content,
+                    LastMessage = _mapper.Map<ChatRoomLastMessageResponseModel>(message!.Message),
+                    UnreadMessagesCount = message.UnreadMessagesCount
+
                 };
             }).ToList();
             return result;

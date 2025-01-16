@@ -29,6 +29,7 @@ namespace Chatti.Services.Messages
             var messages = await dbContext.Messages.Where(x => x.Status == Core.Enums.StatusEnum.Active)
                 .Where(x => x.ChatRoomId.ToString().Equals(ChatRoomId))
                 .Where(x => x.Content.Contains(search, StringComparison.CurrentCultureIgnoreCase))
+                .OrderByDescending(x => x.CreatedOn)
                 .ToListAsync();
             var updateHappened = false;
             foreach (var message in messages)

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Chatti.Models.Messages;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,6 +11,7 @@ namespace Chatti.Models.ChatRooms
     {
         public required string Id { get; set; }
         public required string Name { get; set; }
-        public string? LastMessage { get; set; }
+        public ChatRoomLastMessageResponseModel? LastMessage { get; set; }
+        public int UnreadMessagesCount { get; set; }
     }
 }

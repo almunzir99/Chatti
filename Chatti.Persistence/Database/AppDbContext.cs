@@ -24,6 +24,7 @@ namespace Chatti.Persistence.Database
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            Database.AutoTransactionBehavior = AutoTransactionBehavior.Never;
             base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<User>();
             modelBuilder.Entity<Tenant>();

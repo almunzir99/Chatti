@@ -31,6 +31,8 @@ namespace Chatti.Api.AutoMapper
                 .ForMember(x => x.Type, opt => opt.MapFrom(x => (MimeType)Enum.Parse(typeof(MimeType), x.Type)));
             CreateMap<MessageSeenBy, MessageSeenByResponse>().ReverseMap();
             CreateMap<ChatRoomSettings, ChatRoomSettingsResponseModel>().ReverseMap();
+            CreateMap<Message, ChatRoomLastMessageResponseModel>().ForMember(x => x.Sender, opt => opt.MapFrom(s => s.Sender == null ? null : s.Sender.FullName));
+
 
 
         }
