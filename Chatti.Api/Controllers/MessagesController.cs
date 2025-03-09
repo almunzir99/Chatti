@@ -20,7 +20,7 @@ namespace Chatti.Api.Controllers
             this.service = service;
             this.webHostEnvironment = webHostEnvironment;
         }
-        [HttpPost("send")]
+        [HttpPost("send")]  
         public async Task<IActionResult> SendAsync(IFormFile? attachment, [FromForm] MessageRequestModel model)
         {
             var messageAttachment = attachment != null ? await UploadAsync(attachment, CurrentUserId, model) : null;

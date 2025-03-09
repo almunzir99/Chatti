@@ -56,6 +56,7 @@ namespace Chatti.Services.Messages
         public async Task<MessageResponseModel> SendAsync(MessageRequestModel model, string senderId, MessageAttachmentModel? attachment = null)
         {
             var message = mapper.Map<Message>(model);
+            message.Content = message.Content ?? String.Empty;
             message.Attachment = attachment == null ? null : mapper.Map<MessageAttachment>(attachment);
             var sender = await dbContext.Users.FirstOrDefaultAsync(x => x.Id.ToString().Equals(senderId));
             if (sender == null)
