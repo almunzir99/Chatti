@@ -8,7 +8,7 @@ namespace Chatti.Models.Messages
 {
     public class MessageRequestModel
     {
-        public required string Content { get; set; }
+        public string? Content { get; set; } = string.Empty;
         public required string ChatRoomId { get; set; }
 
     }
