@@ -11,7 +11,7 @@ namespace Chatti.Core.Helpers
     {
         public static MimeType GetMimeType(string extension)
         {
-            var imgExtensions = new List<string>() { ".png", ".jpeg", "jpg", ".jif", ".webp", ".svg" };
+            var imgExtensions = new List<string>() { ".png", ".jpeg", ".jpg", ".jif", ".webp", ".svg" };
             var documentsExtensions = new List<string>() { ".doc", ".docx", ".rtf", ".csv", ".xlsx", ".xlsx" };
             var pdfExtensions = new List<string>() { ".doc", ".docx", ".rtf" };
             if (imgExtensions.Contains(extension.ToLower()))
