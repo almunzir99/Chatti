@@ -20,7 +20,7 @@ namespace Chatti.Api.Controllers
             this.service = service;
             this.webHostEnvironment = webHostEnvironment;
         }
-        [HttpPost("send")]  
+        [HttpPost("send")]
         public async Task<IActionResult> SendAsync(IFormFile? attachment, [FromForm] MessageRequestModel model)
         {
             var messageAttachment = attachment != null ? await UploadAsync(attachment, CurrentUserId, model) : null;
@@ -62,11 +62,13 @@ namespace Chatti.Api.Controllers
             {
                 await file.CopyToAsync(stream);
             }
-            var messageAttachment = new MessageAttachmentModel()
+            var thumnailPath = ImageHelper.GenerateThumbnail(Path.Combine(path, file.FileName));
+             var messageAttachment = new MessageAttachmentModel()
             {
                 AttachmentPath = relativePath,
                 FileName = file.FileName,
                 Type = MIMETypeHelper.GetMimeType(Path.GetExtension(file.FileName)).ToString(),
+                Thumbnail = Path.GetFileName(thumnailPath),
 
             };
             return messageAttachment;
