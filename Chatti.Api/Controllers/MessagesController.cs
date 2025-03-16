@@ -4,6 +4,7 @@ using Chatti.Models.Messages;
 using Chatti.Services.Messages;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Chatti.Api.Controllers
@@ -31,6 +32,19 @@ namespace Chatti.Api.Controllers
         public async Task<IActionResult> GetMessagesAsync([FromRoute] string chatroomId)
         {
             var messages = await service.ListAsync(CurrentUserId, chatroomId);
+            foreach (var item in messages)
+            {
+                if (item.Attachment != null)
+                {
+                    var filePath = Path.Combine(webHostEnvironment.WebRootPath, item.Attachment.AttachmentPath, item.Attachment.FileName);
+                    if(System.IO.File.Exists(filePath))
+                    {
+                        var fileInfo = new FileInfo(filePath);
+                        item.Attachment.SizeInKB = (fileInfo.Length) / 1024;
+                    }
+                   
+                }
+            }
             return Ok(messages);
         }
         [HttpPut("{messageId}")]
@@ -51,6 +65,7 @@ namespace Chatti.Api.Controllers
         public async Task<IActionResult> GetMessageAsync([FromRoute] string messageId)
         {
             var result = await service.GetMessageInfoAsync(CurrentUserId, messageId);
+
             return Ok(result);
         }
         private async Task<MessageAttachmentModel> UploadAsync(IFormFile file, string senderId, MessageRequestModel model)
@@ -63,7 +78,7 @@ namespace Chatti.Api.Controllers
                 await file.CopyToAsync(stream);
             }
             var thumnailPath = ImageHelper.GenerateThumbnail(Path.Combine(path, file.FileName));
-             var messageAttachment = new MessageAttachmentModel()
+            var messageAttachment = new MessageAttachmentModel()
             {
                 AttachmentPath = relativePath,
                 FileName = file.FileName,
