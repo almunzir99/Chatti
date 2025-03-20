@@ -11,7 +11,7 @@ namespace Chatti.Core.Helpers
     public static class ImageHelper
     {
 
-        public static string GenerateThumbnail(string imagePath, int width = 70, int height = 70)
+        public static string GenerateThumbnail(string imagePath, int width = 150, int height = 150)
         {
             if (!File.Exists(imagePath))
             {
@@ -19,23 +19,38 @@ namespace Chatti.Core.Helpers
             }
             using var inputStream = File.OpenRead(imagePath);
             using var original = SKBitmap.Decode(inputStream);
-            if (original == null)
+
+            // Resize the image (keeping aspect ratio)
+            var resizedImage = ResizeImage(original, width, height);
+
+            // Apply blur effect
+            using var blurred = new SKBitmap(width, height);
+            using var canvas = new SKCanvas(blurred);
+            var paint = new SKPaint
             {
-                throw new Exception("Failed to load image.");
-            }
-            var resized = original.Resize(new SKImageInfo(width,height), SKSamplingOptions.Default);
-            if (resized == null)
-            {
-                throw new Exception("Failed to resize image.");
-            }
+                ImageFilter = SKImageFilter.CreateBlur(10, 10)
+            };
+            canvas.DrawBitmap(resizedImage, 0, 0, paint);
+            // Convert to compressed format
+            using var image = SKImage.FromBitmap(blurred);
             var directory = Path.GetDirectoryName(imagePath);
             var filenameWithoutExt = Path.GetFileNameWithoutExtension(imagePath);
             var extension = Path.GetExtension(imagePath);
             var thumbnailPath = Path.Combine(directory!, $"{filenameWithoutExt}_thumbnail{extension}");
-
             using var outputStream = File.OpenWrite(thumbnailPath);
-            resized.Encode(SKEncodedImageFormat.Jpeg, 80).SaveTo(outputStream);
+            image.Encode(SKEncodedImageFormat.Jpeg, 80).SaveTo(outputStream);
             return thumbnailPath;
+        }
+        private static SKBitmap ResizeImage(SKBitmap original, int maxWidth, int maxHeight)
+        {
+            float ratioX = (float)maxWidth / original.Width;
+            float ratioY = (float)maxHeight / original.Height;
+            float ratio = Math.Min(ratioX, ratioY);
+            int newWidth = (int)(original.Width * ratio);
+            int newHeight = (int)(original.Height * ratio);
+
+            var resized = original.Resize(new SKImageInfo(newWidth, newHeight), SKSamplingOptions.Default);
+            return resized ?? original; 
         }
     }
 }
