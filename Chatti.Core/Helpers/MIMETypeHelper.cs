@@ -14,12 +14,16 @@ namespace Chatti.Core.Helpers
             var imgExtensions = new List<string>() { ".png", ".jpeg", ".jpg", ".jif", ".webp", ".svg" };
             var documentsExtensions = new List<string>() { ".doc", ".docx", ".rtf", ".csv", ".xlsx", ".xlsx" };
             var pdfExtensions = new List<string>() { ".doc", ".docx", ".rtf" };
+            var audioExtensions = new List<string>() { ".mp3", ".wav", ".flac", ".aac", ".ogg", ".wma", ".m4a", ".opus", ".aiff", ".alac" };
+
             if (imgExtensions.Contains(extension.ToLower()))
                 return MimeType.IMAGE;
             else if (documentsExtensions.Contains(extension.ToLower()))
                 return MimeType.DOCUMENT;
             else if (pdfExtensions.Contains(extension.ToLower()))
                 return MimeType.PDF;
+            else if (audioExtensions.Contains(extension.ToLower()))
+                return MimeType.AUDIO;
             else
                 return MimeType.File;
 

@@ -10,6 +10,7 @@ namespace Chatti.Core.Enums
     {
         DOCUMENT,
         IMAGE,
+        AUDIO,
         PDF,
         File
 

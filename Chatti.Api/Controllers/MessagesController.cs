@@ -37,12 +37,12 @@ namespace Chatti.Api.Controllers
                 if (item.Attachment != null)
                 {
                     var filePath = Path.Combine(webHostEnvironment.WebRootPath, item.Attachment.AttachmentPath, item.Attachment.FileName);
-                    if(System.IO.File.Exists(filePath))
+                    if (System.IO.File.Exists(filePath))
                     {
                         var fileInfo = new FileInfo(filePath);
                         item.Attachment.SizeInKB = (fileInfo.Length) / 1024;
                     }
-                   
+
                 }
             }
             return Ok(messages);
@@ -72,18 +72,23 @@ namespace Chatti.Api.Controllers
         {
             var relativePath = Path.Combine("uploads", senderId, "chat-rooms", model.ChatRoomId.ToString());
             var path = Path.Combine(webHostEnvironment.WebRootPath, relativePath);
+            var mimeType = MIMETypeHelper.GetMimeType(Path.GetExtension(file.FileName));
             Directory.CreateDirectory(path);
             using (var stream = new FileStream(Path.Combine(path, file.FileName), FileMode.Create))
             {
                 await file.CopyToAsync(stream);
             }
-            var thumnailPath = ImageHelper.GenerateThumbnail(Path.Combine(path, file.FileName));
+            string? thumnailPath = null;
+            if (mimeType == Core.Enums.MimeType.IMAGE)
+            {
+                thumnailPath = ImageHelper.GenerateThumbnail(Path.Combine(path, file.FileName));
+            }
             var messageAttachment = new MessageAttachmentModel()
             {
                 AttachmentPath = relativePath,
                 FileName = file.FileName,
-                Type = MIMETypeHelper.GetMimeType(Path.GetExtension(file.FileName)).ToString(),
-                Thumbnail = Path.GetFileName(thumnailPath),
+                Type = mimeType.ToString(),
+                Thumbnail = thumnailPath == null ? null : Path.GetFileName(thumnailPath),
 
             };
             return messageAttachment;
