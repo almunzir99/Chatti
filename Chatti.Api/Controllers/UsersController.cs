@@ -33,15 +33,22 @@ namespace Chatti.Api.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAsync()
         {
-            string? userId = CurrentUserType == "ADMIN" ? null : CurrentUserId;
-            var users = await userService.GetUsersListAsync(userId);
+            var users = await userService.GetUsersListAsync();
+            return Ok(users);
+        }
+        [Authorize]
+        [HttpGet("contacts")]
+        public async Task<IActionResult> GetContactsAsync()
+        {
+            Request.Headers.TryGetValue("TenantId", out var tenantId);
+            var users = await userService.GetContactsAsync(tenantId:tenantId,userId: CurrentUserId);
             return Ok(users);
         }
         [Authorize(Roles = "ADMIN")]
         [HttpGet("{userId}/password-reset")]
         public async Task<IActionResult> ResetPasswordAsync([FromRoute] string userId, [Required][FromQuery] string password)
         {
-            await userService.ResetPassword(userId,password);
+            await userService.ResetPassword(userId, password);
             return Ok("password has been resetted successfully");
         }
     }

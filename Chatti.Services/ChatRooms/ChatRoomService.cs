@@ -96,13 +96,13 @@ namespace Chatti.Services.ChatRooms
                     Id = x.Id.ToString(),
                     LastMessage = new ChatRoomLastMessageResponseModel()
                     {
-                        Content = string.IsNullOrEmpty(message!.Message.Content) && message!.Message.Attachment != null ? "send you an attachment" : message!.Message.Content,
+                        Content = message == null ? String.Empty : string.IsNullOrEmpty(message!.Message.Content) && message!.Message.Attachment != null ? "send you an attachment" : message!.Message.Content,
                         Sender = message?.Message.Sender.FullName ?? string.Empty,
-                        SentAt =message!.Message.CreatedOn,
+                        SentAt =message?.Message.CreatedOn ?? DateTime.Now,
                         Id = string.Empty
 
                     },
-                    UnreadMessagesCount = message.UnreadMessagesCount
+                    UnreadMessagesCount =  message?.UnreadMessagesCount ?? 0
 
                 };
             }).ToList();
