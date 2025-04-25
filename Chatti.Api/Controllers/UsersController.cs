@@ -36,12 +36,12 @@ namespace Chatti.Api.Controllers
             var users = await userService.GetUsersListAsync();
             return Ok(users);
         }
-        [Authorize]
+        [Authorize(Roles = "USER")]
         [HttpGet("contacts")]
         public async Task<IActionResult> GetContactsAsync()
         {
             Request.Headers.TryGetValue("TenantId", out var tenantId);
-            var users = await userService.GetContactsAsync(tenantId:tenantId,userId: CurrentUserId);
+            var users = await userService.GetContactsAsync(tenantId:tenantId!,userId: CurrentUserId);
             return Ok(users);
         }
         [Authorize(Roles = "ADMIN")]

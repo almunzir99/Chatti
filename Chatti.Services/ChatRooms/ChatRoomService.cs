@@ -102,7 +102,7 @@ namespace Chatti.Services.ChatRooms
                         Id = string.Empty
 
                     },
-                    UnreadMessagesCount =  message?.UnreadMessagesCount ?? 0
+                    UnreadMessagesCount =  message?.UnreadMessagesCount ?? 0   
 
                 };
             }).ToList();
