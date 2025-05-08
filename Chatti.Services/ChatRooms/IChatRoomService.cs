@@ -10,7 +10,7 @@ namespace Chatti.Services.ChatRooms
     public interface IChatRoomService
     {
         Task<ChatRoomDetailReponseModel> CreateAsync(string userId, string tenantId, ChatRoomRequestModel model);
-        Task<List<ChatRoomResponseModel>> ListByUserId(string UserId);
+        Task<List<ChatRoomResponseModel>> ListByUserId(string UserId, ChatRoomFilterRequestModel filter);
         Task<ChatRoomDetailReponseModel> GetById(string chatroomId);
         Task DeleteAsync(string ChatRoomId);
         Task AddParticipantAsync(string adminId, string userId, string chatroomId);

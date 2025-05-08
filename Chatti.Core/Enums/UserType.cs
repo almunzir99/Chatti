@@ -8,7 +8,7 @@ namespace Chatti.Core.Enums
 {
     public enum UserType
     {
-        USER,
-        ADMIN,
+        User,
+        Admin,
     }
 }

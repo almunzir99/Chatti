@@ -25,7 +25,7 @@ namespace Chatti.Persistence.Database
                     PasswordSalt = passwordSalt,
                     CreatedOn = DateTime.Now,
                     ModifiedOn = DateTime.Now,
-                    Type = Core.Enums.UserType.ADMIN,
+                    Type = Core.Enums.UserType.Admin,
                     Email = "admin@info.com"
 
                 });

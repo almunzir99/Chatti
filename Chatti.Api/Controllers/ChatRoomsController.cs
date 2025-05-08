@@ -26,9 +26,9 @@ namespace Chatti.Api.Controllers
             return Ok(result);
         }
         [HttpGet]
-        public async Task<IActionResult> GetChatRoomsListAsync()
+        public async Task<IActionResult> GetChatRoomsListAsync([FromQuery] ChatRoomFilterRequestModel filter)
         {
-            var result = await chatRoomService.ListByUserId(CurrentUserId);
+            var result = await chatRoomService.ListByUserId(CurrentUserId, filter);
             return Ok(result);
         }
         [HttpGet("{id}")]

@@ -35,7 +35,7 @@ namespace Chatti.Services
             var result = HashingHelper.VerifyPassword(model.Password, user.PasswordHash!, user.PasswordSalt!);
             if (!result)
                 throw new Exception("invalid password");
-            if (user.Type != Core.Enums.UserType.ADMIN && (tenantId == null || !user.TenantId.ToString().Equals(tenantId)))
+            if (user.Type != Core.Enums.UserType.Admin && (tenantId == null || !user.TenantId.ToString().Equals(tenantId)))
                 throw new Exception("invalid Tenant id");
             var mappedUser = _mapper.Map<UserResponseModel>(user);
             mappedUser.Token = GenerateToken(user);
@@ -61,7 +61,7 @@ namespace Chatti.Services
                 FullName = model.FullName,
                 Email = model.Email,
                 TenantId = new MongoDB.Bson.ObjectId(tenantId),
-                Type = Core.Enums.UserType.USER,
+                Type = Core.Enums.UserType.User,
 
 
             };
@@ -99,7 +99,7 @@ namespace Chatti.Services
                 Subject = new ClaimsIdentity(new Claim[]
                 {
                     new Claim("id", user.Id.ToString()),
-                    new Claim(ClaimTypes.Role, user.Type == Core.Enums.UserType.USER ? "USER" : "ADMIN"),
+                    new Claim(ClaimTypes.Role, user.Type == Core.Enums.UserType.User ? "USER" : "ADMIN"),
                 }),
                 Expires = DateTime.UtcNow.AddDays(1),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature),
@@ -116,7 +116,7 @@ namespace Chatti.Services
         {
             var users = await _dbContext.Users
                 .Where(x => x.Status == Core.Enums.StatusEnum.Active)
-                .Where(x => x.Type == Core.Enums.UserType.USER)
+                .Where(x => x.Type == Core.Enums.UserType.User)
                 .ToListAsync();
             return _mapper.Map<List<UserResponseModel>>(users);
         }
@@ -125,7 +125,7 @@ namespace Chatti.Services
         {
             var users = await _dbContext.Users
                .Where(x => x.Status == Core.Enums.StatusEnum.Active)
-               .Where(x => x.Type == Core.Enums.UserType.USER)
+               .Where(x => x.Type == Core.Enums.UserType.User)
                .Where(x => x.TenantId.ToString().Equals(tenantId))
                .Where(x => !x.Id.ToString().Equals(userId))
                .ToListAsync();

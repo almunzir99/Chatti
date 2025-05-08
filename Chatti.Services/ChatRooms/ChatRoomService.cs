@@ -69,13 +69,35 @@ namespace Chatti.Services.ChatRooms
             throw new NotImplementedException();
         }
 
-        public async Task<List<ChatRoomResponseModel>> ListByUserId(string UserId)
+        public async Task<List<ChatRoomResponseModel>> ListByUserId(string UserId, ChatRoomFilterRequestModel filter)
         {
             // fetch chatrooms
-            var chatrooms = await dbContext.ChatRooms
+            var query = dbContext.ChatRooms
                 .Where(x => x.Status == Core.Enums.StatusEnum.Active)
-                .Where(x => x.Participants.Any(x => x.UserId.ToString().Equals(UserId))).ToListAsync();
-            var chatroomIds = chatrooms.Select(x => x.Id).ToList();
+                .Where(x => filter.Search == null || x.Name.Contains(filter.Search))
+                .Where(x => x.Participants.Any(x => x.UserId.ToString().Equals(UserId)))      .AsQueryable();
+            // apply filters
+            switch (filter.type)
+            {
+                case Core.Enums.ChatFilterType.All:
+                    break;
+                case Core.Enums.ChatFilterType.Single:
+                    query = query.Where(x => x.Participants.Count == 2);
+                    break;
+                case Core.Enums.ChatFilterType.Group:
+                    query = query.Where(x => x.Participants.Count > 2);
+                    break;
+                case Core.Enums.ChatFilterType.Favorite:
+                    break;
+                case Core.Enums.ChatFilterType.Archive:
+                    break;
+                default:
+                    break;
+            }
+
+
+            var chatrooms = await query.ToListAsync();
+            var chatroomIds = query.Select(x => x.Id).ToList();
             var lastMessages = (await dbContext.Messages
                 .Where(x => x.Status == Core.Enums.StatusEnum.Active)
                 .Where(x => chatroomIds.Any(c => c.Equals(x.ChatRoomId))).ToListAsync())
@@ -98,11 +120,11 @@ namespace Chatti.Services.ChatRooms
                     {
                         Content = message == null ? String.Empty : string.IsNullOrEmpty(message!.Message.Content) && message!.Message.Attachment != null ? "send you an attachment" : message!.Message.Content,
                         Sender = message?.Message.Sender.FullName ?? string.Empty,
-                        SentAt =message?.Message.CreatedOn ?? DateTime.Now,
+                        SentAt = message?.Message.CreatedOn ?? DateTime.Now,
                         Id = string.Empty
 
                     },
-                    UnreadMessagesCount =  message?.UnreadMessagesCount ?? 0   
+                    UnreadMessagesCount = message?.UnreadMessagesCount ?? 0
 
                 };
             }).ToList();

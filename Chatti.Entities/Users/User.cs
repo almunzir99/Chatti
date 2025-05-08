@@ -24,7 +24,7 @@ namespace Chatti.Entities.Users
         public byte[]? PasswordHash { get; set; }
         [Required]
         public byte[]? PasswordSalt { get; set; }
-        public UserType Type { get; set; } = UserType.USER;
+        public UserType Type { get; set; } = UserType.User;
         public ObjectId TenantId { get; set; }
 
     }
