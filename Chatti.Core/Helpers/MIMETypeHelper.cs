@@ -13,7 +13,7 @@ namespace Chatti.Core.Helpers
         {
             var imgExtensions = new List<string>() { ".png", ".jpeg", ".jpg", ".jif", ".webp", ".svg" };
             var documentsExtensions = new List<string>() { ".doc", ".docx", ".rtf", ".csv", ".xlsx", ".xlsx" };
-            var pdfExtensions = new List<string>() { ".doc", ".docx", ".rtf" };
+            var pdfExtensions = new List<string>() { ".pdf" };
             var audioExtensions = new List<string>() { ".mp3", ".wav", ".flac", ".aac", ".ogg", ".wma", ".m4a", ".opus", ".aiff", ".alac" };
 
             if (imgExtensions.Contains(extension.ToLower()))
