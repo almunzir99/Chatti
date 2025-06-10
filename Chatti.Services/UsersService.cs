@@ -121,13 +121,14 @@ namespace Chatti.Services
             return _mapper.Map<List<UserResponseModel>>(users);
         }
 
-        public async Task<List<UserResponseModel>> GetContactsAsync(string tenantId, string userId)
+        public async Task<List<UserResponseModel>> GetContactsAsync(string tenantId, string userId, string search)
         {
             var users = await _dbContext.Users
                .Where(x => x.Status == Core.Enums.StatusEnum.Active)
                .Where(x => x.Type == Core.Enums.UserType.User)
                .Where(x => x.TenantId.ToString().Equals(tenantId))
                .Where(x => !x.Id.ToString().Equals(userId))
+               .Where(x => string.IsNullOrEmpty(search) || x.Username.Contains(search) || x.FullName.Contains(search) || (x.Email != null && x.Email.Contains(search)))
                .ToListAsync();
             return _mapper.Map<List<UserResponseModel>>(users);
 

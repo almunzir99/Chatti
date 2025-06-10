@@ -38,10 +38,10 @@ namespace Chatti.Api.Controllers
         }
         [Authorize(Roles = "USER")]
         [HttpGet("contacts")]
-        public async Task<IActionResult> GetContactsAsync()
+        public async Task<IActionResult> GetContactsAsync([FromQuery] string? search)
         {
             Request.Headers.TryGetValue("TenantId", out var tenantId);
-            var users = await userService.GetContactsAsync(tenantId:tenantId!,userId: CurrentUserId);
+            var users = await userService.GetContactsAsync(tenantId: tenantId!, userId: CurrentUserId, search ?? string.Empty);
             return Ok(users);
         }
         [Authorize(Roles = "ADMIN")]
