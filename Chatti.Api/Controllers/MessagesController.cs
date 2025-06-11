@@ -83,6 +83,10 @@ namespace Chatti.Api.Controllers
             {
                 thumnailPath = ImageHelper.GenerateThumbnail(Path.Combine(path, file.FileName));
             }
+            else if (mimeType == Core.Enums.MimeType.PDF)
+            {
+                thumnailPath = ImageHelper.GeneratePdfSnapshotAsync(Path.Combine(path, file.FileName));
+            }
             var messageAttachment = new MessageAttachmentModel()
             {
                 AttachmentPath = relativePath,
