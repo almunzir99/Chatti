@@ -59,7 +59,7 @@ namespace Chatti.Core.Helpers
             outputStream.Flush();
             outputStream.Close();
             // Optionally, you can also create a thumbnail
-            var thumbnailPath = GenerateThumbnail(outputPath, width, height, 1);
+            var thumbnailPath = GenerateThumbnail(outputPath, width, height, 0);
             // delete the original snapshot if you only want the thumbnail
             if (File.Exists(outputPath))
             {

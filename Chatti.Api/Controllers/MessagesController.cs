@@ -1,4 +1,5 @@
-﻿using Chatti.Core.Helpers;
+﻿using Chatti.Core.Enums;
+using Chatti.Core.Helpers;
 using Chatti.Entities;
 using Chatti.Models.Messages;
 using Chatti.Services.Messages;
@@ -13,6 +14,7 @@ namespace Chatti.Api.Controllers
     [Route("api/messages")]
     public class MessagesController : BaseApiController
     {
+        private const string chatroomId = "{chatroomId}";
         private readonly IMessagesService service;
         private readonly IWebHostEnvironment webHostEnvironment;
 
@@ -46,6 +48,12 @@ namespace Chatti.Api.Controllers
                 }
             }
             return Ok(messages);
+        }
+        [HttpGet("{chatroomId}/attachments")]
+        public async Task<IActionResult> GetChatRoomAttachmentsAsync([FromRoute] string chatroomId, [FromQuery] MimeType? type = null)
+        {
+            var result = await service.AttachmentsListAsync(chatroomId, type);
+            return Ok(result);
         }
         [HttpPut("{messageId}")]
         public async Task<IActionResult> EditMessageAsync([FromRoute] string messageId, MessageRequestModel model)
@@ -96,8 +104,6 @@ namespace Chatti.Api.Controllers
 
             };
             return messageAttachment;
-
-
         }
 
 

@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Chatti.Core.Enums;
 using Chatti.Entities.Messages;
 using Chatti.Entities.Users;
 using Chatti.Models.Messages;
@@ -122,6 +123,18 @@ namespace Chatti.Services.Messages
             }
             return model;
 
+        }
+
+        public async Task<IList<MessageAttachmentModel>> AttachmentsListAsync(string ChatRoomId, MimeType? type)
+        {
+            var attachments = (await dbContext.Messages
+                .Where(x => ChatRoomId.Equals(x.ChatRoomId.ToString()))
+                .Where(x => x.Attachment != null)
+                .Where(x => type == null || x.Attachment!.Type == type)
+                .ToListAsync())
+                .Select(x => x.Attachment);
+
+            return mapper.Map<IList<MessageAttachmentModel>>(attachments);
         }
     }
 }
