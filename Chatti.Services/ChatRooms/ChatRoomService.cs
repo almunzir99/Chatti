@@ -75,7 +75,7 @@ namespace Chatti.Services.ChatRooms
             var query = dbContext.ChatRooms
                 .Where(x => x.Status == Core.Enums.StatusEnum.Active)
                 .Where(x => filter.Search == null || x.Name.Contains(filter.Search))
-                .Where(x => x.Participants.Any(x => x.UserId.ToString().Equals(UserId)))      .AsQueryable();
+                .Where(x => x.Participants.Any(x => x.UserId.ToString().Equals(UserId))).AsQueryable();
             // apply filters
             switch (filter.type)
             {
@@ -180,6 +180,28 @@ namespace Chatti.Services.ChatRooms
                 IsAdmin = false,
                 UserId = new MongoDB.Bson.ObjectId(userId)
             });
+            dbContext.ChangeTracker.DetectChanges();
+            await dbContext.SaveChangesAsync();
+        }
+
+        public async Task AddParticipantsAsync(string adminId, List<string> participantsIds, string chatroomId)
+        {
+            var chatroom = await dbContext.ChatRooms
+                .Where(x => x.Status == Core.Enums.StatusEnum.Active)
+                .Where(x => x.Id.ToString().Equals(chatroomId))
+                .Where(x => x.Participants.Any(x => x.IsAdmin && x.UserId.ToString().Equals(adminId)))
+                .FirstOrDefaultAsync();
+            if (chatroom == null) { throw new Exception("Invalid chatroom id"); }
+            var chatroomParticipantsIds = chatroom.Participants.Select(x => x.UserId.ToString()).ToList();
+            var finalParticipantIds = participantsIds.Except<string>(chatroomParticipantsIds).ToList();
+            foreach (var participantId in finalParticipantIds)
+            {
+                chatroom.Participants.Add(new ChatRoomParticipant()
+                {
+                    IsAdmin = false,
+                    UserId = new MongoDB.Bson.ObjectId(participantId),
+                });
+            }
             dbContext.ChangeTracker.DetectChanges();
             await dbContext.SaveChangesAsync();
         }

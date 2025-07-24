@@ -17,6 +17,6 @@ namespace Chatti.Services.ChatRooms
         Task RemoveParticipantAsync(string adminId, string userId, string chatroomId);
 
         Task LeaveAsync(string userId, string chatroomId);
-
+        Task AddParticipantsAsync(string adminId, List<string> participantsIds, string chatroomId);
     }
 }

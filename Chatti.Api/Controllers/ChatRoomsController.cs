@@ -47,6 +47,15 @@ namespace Chatti.Api.Controllers
                 Message = "Participant added successfully"
             });
         }
+        [HttpPost("{chatroomId}/participants/add")]
+        public async Task<IActionResult> AddParticipantsChatRoomAsync([FromRoute] string chatroomId, [FromBody] List<string> particpantsIds)
+        {
+            await chatRoomService.AddParticipantsAsync(CurrentUserId, particpantsIds, chatroomId);
+            return Ok(new
+            {
+                Message = "Participant added successfully"
+            });
+        }
         [HttpDelete("{chatroomId}/participants/remove/${userId}")]
         public async Task<IActionResult> DeleteParticipantChatRoomAsync([FromRoute] string chatroomId, string userId)
         {
