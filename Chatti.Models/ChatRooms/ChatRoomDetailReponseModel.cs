@@ -10,6 +10,7 @@ namespace Chatti.Models.ChatRooms
         public List<UserResponseModel> Participants { get; set; } = new();
         public ChatRoomSettingsResponseModel? Settings { get; set; }
         public List<MessageAttachmentModel> Attachments { get; set; } = new();
+        public string? AdminId { get; set; }
 
     }
 }

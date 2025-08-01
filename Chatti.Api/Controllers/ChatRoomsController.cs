@@ -66,11 +66,9 @@ namespace Chatti.Api.Controllers
             });
         }
         [HttpDelete("{chatroomId}/participants/leave")]
-        public async Task<IActionResult> LeaveChatRoomAsync([FromRoute] string chatroomId, string userId)
+        public async Task<IActionResult> LeaveChatRoomAsync([FromRoute] string chatroomId)
         {
-            if (userId == CurrentUserId)
-                return Forbid("You aren't allowed to do this operation");
-            await chatRoomService.LeaveAsync(chatroomId, userId);
+            await chatRoomService.LeaveAsync(CurrentUserId,chatroomId);
             return Ok(new
             {
                 Message = "you left the chatroom successfully"

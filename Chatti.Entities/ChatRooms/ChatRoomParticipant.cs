@@ -11,5 +11,6 @@ namespace Chatti.Entities.ChatRooms
     {
         public ObjectId UserId { get; set; }
         public bool IsAdmin { get; set; }
+        public DateTime? AddedAt { get; set; }
     }
 }

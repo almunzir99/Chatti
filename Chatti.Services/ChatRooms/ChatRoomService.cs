@@ -139,10 +139,23 @@ namespace Chatti.Services.ChatRooms
             {
                 throw new Exception("Invalid chatroom id");
             }
+            var participantIds = chatroom.Participants.OrderByDescending(x => x.IsAdmin).Select(x => x.UserId);
             // get participant users response
             var users = await dbContext.Users
                 .Where(x => x.Status == Core.Enums.StatusEnum.Active)
-                .Where(user => chatroom.Participants.Any(x => x.UserId.Equals(user.Id))).ToListAsync();
+                .Where(user => participantIds.Contains(user.Id))
+                .ToListAsync();
+
+            // order the users 
+            var orderedUsers = new List<User>();
+            foreach (var participantId in participantIds)
+            {
+                var user = users.FirstOrDefault(u => u.Id == participantId);
+                if (user != null)
+                {
+                    orderedUsers.Add(user);
+                }
+            }
 
             // get attachments
             var messages = await dbContext.Messages
@@ -152,12 +165,12 @@ namespace Chatti.Services.ChatRooms
                 .AsNoTracking()
                 .ToListAsync();
 
-            // get 
             return new ChatRoomDetailReponseModel()
             {
                 Id = chatroomId,
                 Name = chatroom!.Name,
-                Participants = _mapper.Map<List<UserResponseModel>>(users),
+                AdminId = chatroom.Participants.Where(x => x.IsAdmin).FirstOrDefault()?.UserId.ToString(),
+                Participants = _mapper.Map<List<UserResponseModel>>(orderedUsers),
                 Attachments = _mapper.Map<List<MessageAttachmentModel>>(messages.Select(x => x.Attachment).ToList()),
                 Settings = _mapper.Map<ChatRoomSettingsResponseModel>(chatroom.Settings)
             };
@@ -239,6 +252,12 @@ namespace Chatti.Services.ChatRooms
                 throw new Exception("The target participant isn't available");
             }
             chatroom.Participants.Remove(target);
+            // Set the next added user as an admin
+            var nextAdmin = chatroom.Participants.OrderBy(x => x.AddedAt).ThenBy(x => x.UserId).FirstOrDefault();
+            if (nextAdmin != null)
+            {
+                nextAdmin.IsAdmin = true;
+            }
             dbContext.ChangeTracker.DetectChanges();
             await dbContext.SaveChangesAsync();
         }
